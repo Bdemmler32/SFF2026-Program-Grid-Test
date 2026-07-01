@@ -34,35 +34,17 @@
     </button>
   </div>
 
-  <div class="sffp-filters">
-    <div class="sffp-filter-group sffp-filter-day-group">
-      <div class="sffp-filter-label">Day</div>
-      <div class="sffp-filter-buttons" id="sffp-dayButtons"></div>
-    </div>
+  <details class="sffp-filters-outer">
+    <summary class="sffp-filters-summary">
+      <span class="sffp-filters-summary-title">Filters</span>
+      <span class="sffp-filters-summary-right">
+        <button type="button" id="sffp-resetFiltersBtn" class="sffp-reset-btn">Reset Filters</button>
+        <i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i>
+      </span>
+    </summary>
 
-    <details class="sffp-filter-dropdown">
-      <summary><span>Room</span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
-      <div class="sffp-filter-buttons" id="sffp-roomButtons"></div>
-    </details>
+    <div class="sffp-filters-body">
 
-    <details class="sffp-filter-dropdown">
-      <summary><span>Topic Area</span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
-      <div class="sffp-topic-filter-tree" id="sffp-topicButtons"></div>
-    </details>
-
-    <details class="sffp-filter-dropdown">
-      <summary><span>Presentation Type</span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
-      <div class="sffp-filter-buttons" id="sffp-typeButtons"></div>
-    </details>
-
-    <details class="sffp-filter-dropdown">
-      <summary><span>Color and Icon Key</span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
-      <div class="sffp-legend" id="sffp-legend"></div>
-    </details>
-  </div>
-
-  <div class="sffp-toolbar">
-    <div class="sffp-toolbar-left">
       <div class="sffp-sort-container" id="sffp-sortContainer">
         <label for="sffp-sortSelect">Sort by</label>
         <select id="sffp-sortSelect">
@@ -72,16 +54,50 @@
           <option value="topic">Topic Area</option>
         </select>
       </div>
-      <div class="sffp-grid-layout-toggle" id="sffp-gridLayoutToggle" style="display:none;">
-        <span class="sffp-slider-label">Grid</span>
-        <label class="sffp-toggle-slider">
-          <input type="checkbox" id="sffp-gridLayoutCheckbox">
-          <span class="sffp-slider"></span>
-        </label>
-        <span class="sffp-slider-label">Stacked List</span>
-      </div>
+
+      <details class="sffp-filter-dropdown">
+        <summary><span>Day</span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
+        <div class="sffp-filter-buttons" id="sffp-dayButtons"></div>
+      </details>
+
+      <details class="sffp-filter-dropdown">
+        <summary><span>Room</span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
+        <div class="sffp-filter-buttons" id="sffp-roomButtons"></div>
+      </details>
+
+      <details class="sffp-filter-dropdown">
+        <summary><span class="sffp-topic-summary-left">Topic Area <span class="sffp-topic-summary-tag" id="sffp-topicSummaryTag">Any</span></span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
+        <div class="sffp-topic-filter-tree">
+          <div class="sffp-topic-tree-toolbar">
+            <div class="sffp-topic-selected-chips" id="sffp-topicSelectedChips"></div>
+            <button type="button" class="sffp-topic-clear-link" id="sffp-topicClearBtn" style="display:none;">Clear</button>
+          </div>
+          <div id="sffp-topicButtons"></div>
+        </div>
+      </details>
+
+      <details class="sffp-filter-dropdown">
+        <summary><span>Presentation Type</span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
+        <div class="sffp-filter-buttons" id="sffp-typeButtons"></div>
+      </details>
+
+      <details class="sffp-filter-dropdown">
+        <summary><span>Color and Icon Key</span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
+        <div class="sffp-legend" id="sffp-legend"></div>
+      </details>
+
     </div>
-    <button type="button" id="sffp-resetFiltersBtn" class="sffp-reset-btn">Reset Filters</button>
+  </details>
+
+  <div class="sffp-toolbar">
+    <div class="sffp-grid-layout-toggle" id="sffp-gridLayoutToggle" style="display:none;">
+      <span class="sffp-slider-label">Stacked</span>
+      <label class="sffp-toggle-slider">
+        <input type="checkbox" id="sffp-gridLayoutCheckbox">
+        <span class="sffp-slider"></span>
+      </label>
+      <span class="sffp-slider-label">Grid</span>
+    </div>
   </div>
 
   <div class="sffp-grid-day-note" id="sffp-gridDayNote" style="display:none;"></div>
@@ -146,8 +162,17 @@
   .sffp-view-btn:hover { border-color: var(--sffp-accent); color: var(--sffp-ink); }
   .sffp-view-btn.active { background: var(--sffp-accent); border-color: var(--sffp-accent); color: #fff; }
 
-  .sffp-filters { background: #f8f6f1; border: 1px solid var(--sffp-line); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 12px; }
-  .sffp-filter-group { width: 100%; }
+  .sffp-filters-outer { border: 1px solid var(--sffp-line); border-radius: 10px; background: #f8f6f1; margin-bottom: 14px; }
+  .sffp-filters-summary {
+    list-style: none; cursor: pointer; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .sffp-filters-summary::-webkit-details-marker { display: none; }
+  .sffp-filters-summary:focus-visible { outline: 2px solid var(--sffp-accent); outline-offset: 2px; }
+  .sffp-filters-summary-title { font-weight: 700; font-size: 17px; }
+  .sffp-filters-summary-right { display: flex; align-items: center; gap: 14px; }
+  .sffp-filters-outer[open] > .sffp-filters-summary .sffp-chevron { transform: rotate(180deg); }
+  .sffp-filters-body { display: flex; flex-direction: column; gap: 12px; padding: 0 16px 16px; }
+
   .sffp-filter-label { font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--sffp-muted); margin-bottom: 8px; font-size: 14px; }
   .sffp-filter-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
   .sffp-filter-btn {
@@ -167,18 +192,65 @@
   .sffp-filter-dropdown summary::-webkit-details-marker { display: none; }
   .sffp-filter-dropdown summary:focus-visible { outline: 2px solid var(--sffp-accent); outline-offset: 2px; }
   .sffp-chevron { transition: transform .15s; font-size: 13px; }
-  .sffp-filter-dropdown[open] summary .sffp-chevron { transform: rotate(180deg); }
+  .sffp-filter-dropdown[open] > summary .sffp-chevron { transform: rotate(180deg); }
   .sffp-filter-dropdown > div, .sffp-filter-dropdown > .sffp-topic-filter-tree, .sffp-filter-dropdown > .sffp-legend {
     padding: 4px 14px 14px;
   }
 
-  .sffp-topic-filter-tree { display: flex; flex-direction: column; gap: 10px; }
-  .sffp-topic-group { display: flex; flex-direction: column; gap: 6px; }
-  .sffp-subtopic-buttons { display: flex; flex-wrap: wrap; gap: 6px; padding-left: 18px; border-left: 3px solid var(--sffp-line); margin-left: 4px; }
-  .sffp-subtopic-btn { max-width: 260px; white-space: normal; text-align: left; background: #f8f6f1; }
+  .sffp-topic-summary-left { display: flex; align-items: center; gap: 10px; }
+  .sffp-topic-summary-tag { background: #f0ede6; color: var(--sffp-muted); border-radius: 20px; padding: 2px 10px; font-size: 13px; font-weight: 700; text-transform: none; letter-spacing: 0; }
+  .sffp-topic-summary-tag.active { background: var(--sffp-accent); color: #fff; }
 
-  .sffp-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
-  .sffp-toolbar-left { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .sffp-topic-filter-tree { padding: 4px 14px 14px; }
+  .sffp-topic-tree-toolbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+  .sffp-topic-selected-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sffp-topic-selected-chips:empty { display: none; }
+  .sffp-topic-selected-chip {
+    display: inline-flex; align-items: center; gap: 6px; background: #f0ede6; border-radius: 20px;
+    padding: 5px 6px 5px 12px; font-weight: 600; color: var(--sffp-ink);
+  }
+  .sffp-topic-selected-chip button {
+    border: none; background: rgba(0,0,0,0.08); width: 22px; height: 22px; border-radius: 50%;
+    cursor: pointer; color: var(--sffp-muted); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .sffp-topic-selected-chip button:hover { background: rgba(0,0,0,0.18); }
+  .sffp-topic-clear-link { border: none; background: none; color: #b02a2a; font-weight: 600; cursor: pointer; padding: 4px 6px; flex-shrink: 0; }
+  .sffp-topic-clear-link:hover { text-decoration: underline; }
+
+  .sffp-topic-cat { border-top: 1px solid #f0ede6; }
+  .sffp-topic-cat:first-child { border-top: none; }
+  .sffp-topic-cat-row { display: flex; align-items: center; gap: 10px; padding: 10px 4px; cursor: pointer; user-select: none; }
+  .sffp-topic-cat-row:hover { background: #f8f6f1; }
+
+  .sffp-topic-checkbox {
+    width: 22px; height: 22px; border-radius: 5px; border: 1.5px solid var(--sffp-line); background: #fff;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .1s;
+  }
+  .sffp-topic-checkbox svg { width: 13px; height: 13px; display: none; }
+  .sffp-topic-checkbox.checked svg.check { display: block; }
+  .sffp-topic-checkbox.partial svg.dash { display: block; }
+  .sffp-topic-checkbox.checked, .sffp-topic-checkbox.partial { border-color: var(--cat-color, var(--sffp-accent)); background: var(--cat-color, var(--sffp-accent)); }
+  .sffp-topic-checkbox.checked svg, .sffp-topic-checkbox.partial svg { stroke: #fff; }
+
+  .sffp-topic-swatch { width: 11px; height: 11px; border-radius: 3px; background: var(--cat-color, var(--sffp-accent)); flex-shrink: 0; }
+  .sffp-topic-cat-label { flex: 1; font-weight: 600; }
+  .sffp-topic-cat-count { color: var(--sffp-muted); background: #f0ede6; padding: 2px 10px; border-radius: 20px; font-size: 14px; }
+
+  .sffp-topic-chevron-btn { border: none; background: none; padding: 4px; color: var(--sffp-muted); cursor: pointer; display: flex; }
+  .sffp-topic-chevron-btn i { font-size: 14px; transition: transform .15s; }
+  .sffp-topic-cat.open .sffp-topic-chevron-btn i { transform: rotate(180deg); }
+
+  .sffp-topic-subs { display: none; flex-direction: column; padding: 2px 4px 10px 20px; margin-left: 9px; border-left: 2px solid #f0ede6; gap: 2px; }
+  .sffp-topic-cat.open .sffp-topic-subs { display: flex; }
+  .sffp-topic-cat.single-child .sffp-topic-chevron-btn { display: none; }
+  .sffp-topic-cat.single-child .sffp-topic-subs { display: none !important; }
+
+  .sffp-topic-sub-row { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 6px; cursor: pointer; }
+  .sffp-topic-sub-row:hover { background: #f8f6f1; }
+  .sffp-topic-sub-label { flex: 1; }
+  .sffp-topic-sub-count { color: var(--sffp-muted); background: #f0ede6; padding: 1px 9px; border-radius: 20px; font-size: 13px; }
+
+  .sffp-toolbar { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
   .sffp-sort-container { display: flex; align-items: center; gap: 8px; color: var(--sffp-muted); }
   .sffp-sort-container select { padding: 6px 8px; border-radius: 6px; border: 1px solid var(--sffp-line); background: #fff; }
   .sffp-grid-layout-toggle { display: flex; align-items: center; gap: 8px; color: var(--sffp-muted); }
@@ -188,7 +260,7 @@
   .sffp-slider::before { content: ""; position: absolute; height: 14px; width: 14px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .2s; }
   .sffp-toggle-slider input:checked + .sffp-slider { background: var(--sffp-accent); }
   .sffp-toggle-slider input:checked + .sffp-slider::before { transform: translateX(18px); }
-  .sffp-reset-btn { padding: 8px 16px; border-radius: 7px; border: 1.5px solid var(--sffp-line); background: #fff; color: var(--sffp-muted); cursor: pointer; }
+  .sffp-reset-btn { padding: 7px 14px; border-radius: 7px; border: 1.5px solid var(--sffp-line); background: #fff; color: var(--sffp-muted); cursor: pointer; font-size: 14px; }
   .sffp-reset-btn:hover { border-color: #c0392b; color: #c0392b; }
 
   .sffp-legend { display: flex; flex-wrap: wrap; gap: 14px; }
@@ -271,9 +343,10 @@
   .sffp-stacked-room-card {
     border: 1.5px solid; border-radius: 8px; padding: 12px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;
   }
-  .sffp-stacked-room-name { font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--sffp-muted); }
-  .sffp-stacked-title { font-weight: 600; }
-  .sffp-stacked-speaker { color: var(--sffp-muted); }
+  .sffp-stacked-title { font-weight: 700; }
+  .sffp-stacked-speaker { color: var(--sffp-muted); display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+  .sffp-stacked-room-name { color: var(--sffp-muted); display: flex; align-items: center; gap: 6px; margin-top: 3px; font-weight: 600; }
+  .sffp-stacked-speaker i, .sffp-stacked-room-name i { width: 16px; text-align: center; }
 
   .sffp-no-events, .sffp-loading, .sffp-error { text-align: center; padding: 40px 20px; color: var(--sffp-muted); }
   .sffp-error { color: #b02a2a; }
@@ -316,6 +389,8 @@
     .sffp-modal { padding: 22px 18px 20px; max-height: 90vh; }
     .sffp-modal-meta-grid { grid-template-columns: 1fr; }
     .sffp-topbar { flex-wrap: wrap; }
+    .sffp-filters-summary-right { gap: 8px; }
+    .sffp-reset-btn { padding: 6px 10px; font-size: 13px; }
   }
 </style>
 
@@ -361,6 +436,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const dayButtonsEl = el('sffp-dayButtons');
   const roomButtonsEl = el('sffp-roomButtons');
   const topicButtonsEl = el('sffp-topicButtons');
+  const topicSelectedChipsEl = el('sffp-topicSelectedChips');
+  const topicClearBtn = el('sffp-topicClearBtn');
+  const topicSummaryTagEl = el('sffp-topicSummaryTag');
   const typeButtonsEl = el('sffp-typeButtons');
   const dateInfoEl = el('sffp-dateInfo');
   const loadingEl = el('sffp-loading');
@@ -394,7 +472,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let events = [];       // flat list of talks/posters
   let blocks = [];       // grouped by dateKey+startMinutes+room
   let currentView = 'list';          // 'list' | 'grid'
-  let gridLayoutMode = window.innerWidth <= 700 ? 'stacked' : 'grid'; // for grid view only
+  let gridLayoutMode = 'stacked'; // for grid view only — Stacked is the default
   let sortMode = 'time';
   let searchQuery = '';
   let isSearchActive = false;
@@ -660,66 +738,124 @@ document.addEventListener('DOMContentLoaded', function () {
     topicButtonsEl.innerHTML = '';
     topicGroups = {};
     const byBroad = {};
-    Object.keys(TOPIC_COLORS).forEach(t => (byBroad[t] = new Set()));
-    events.forEach(e => { if (byBroad[e.broadTopic]) byBroad[e.broadTopic].add(e.topicArea); });
+    Object.keys(TOPIC_COLORS).forEach(t => (byBroad[t] = new Map())); // full topicArea -> count
+    events.forEach(e => {
+      if (!byBroad[e.broadTopic]) return;
+      byBroad[e.broadTopic].set(e.topicArea, (byBroad[e.broadTopic].get(e.topicArea) || 0) + 1);
+    });
 
     Object.keys(TOPIC_COLORS).forEach(broad => {
-      const subs = Array.from(byBroad[broad]).filter(Boolean).sort();
+      const subs = Array.from(byBroad[broad].entries())
+        .filter(([full]) => full)
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([full, count]) => ({ full, count, label: subtopicLabel(full, broad) }));
       if (!subs.length) return;
-      topicGroups[broad] = subs;
+      topicGroups[broad] = subs.map(s => s.full);
+      const total = subs.reduce((sum, s) => sum + s.count, 0);
       const colors = TOPIC_COLORS[broad];
 
-      const group = document.createElement('div');
-      group.className = 'sffp-topic-group';
+      const catEl = document.createElement('div');
+      catEl.className = 'sffp-topic-cat' + (subs.length === 1 ? ' single-child' : '');
+      catEl.style.setProperty('--cat-color', colors.border);
+      catEl.dataset.broad = broad;
 
-      const broadBtn = document.createElement('button');
-      broadBtn.type = 'button';
-      broadBtn.className = 'sffp-filter-btn sffp-topic-broad-btn';
-      broadBtn.textContent = broad;
-      broadBtn.style.borderColor = colors.border;
-      broadBtn.dataset.broad = broad;
-      broadBtn.addEventListener('click', () => {
-        const allSelected = subs.every(s => filters.topics.has(s));
-        subs.forEach(s => (allSelected ? filters.topics.delete(s) : filters.topics.add(s)));
+      const row = document.createElement('div');
+      row.className = 'sffp-topic-cat-row';
+      row.innerHTML = `
+        <span class="sffp-topic-checkbox" data-role="cat-checkbox">
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <svg class="dash" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </span>
+        <span class="sffp-topic-swatch"></span>
+        <span class="sffp-topic-cat-label">${escapeHtml(broad)}</span>
+        <span class="sffp-topic-cat-count">${total}</span>
+        <button type="button" class="sffp-topic-chevron-btn" aria-label="Expand ${escapeHtml(broad)}">
+          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+        </button>
+      `;
+      catEl.appendChild(row);
+
+      const subsWrap = document.createElement('div');
+      subsWrap.className = 'sffp-topic-subs';
+      subs.forEach(sub => {
+        const subRow = document.createElement('div');
+        subRow.className = 'sffp-topic-sub-row';
+        subRow.dataset.sub = sub.full;
+        subRow.innerHTML = `
+          <span class="sffp-topic-checkbox" data-role="sub-checkbox">
+            <svg class="check" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </span>
+          <span class="sffp-topic-sub-label">${escapeHtml(sub.label)}</span>
+          <span class="sffp-topic-sub-count">${sub.count}</span>
+        `;
+        subRow.addEventListener('click', () => {
+          toggleSetMember(filters.topics, sub.full);
+          refreshTopicButtonStates();
+          render();
+        });
+        subsWrap.appendChild(subRow);
+      });
+      catEl.appendChild(subsWrap);
+
+      const catCheckbox = row.querySelector('[data-role="cat-checkbox"]');
+      catCheckbox.addEventListener('click', ev => {
+        ev.stopPropagation();
+        const fulls = subs.map(s => s.full);
+        const allSelected = fulls.every(f => filters.topics.has(f));
+        fulls.forEach(f => (allSelected ? filters.topics.delete(f) : filters.topics.add(f)));
         refreshTopicButtonStates();
         render();
       });
-      group.appendChild(broadBtn);
 
-      if (subs.length > 1) {
-        const subWrap = document.createElement('div');
-        subWrap.className = 'sffp-subtopic-buttons';
-        subs.forEach(sub => {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'sffp-filter-btn sffp-subtopic-btn';
-          btn.textContent = subtopicLabel(sub, broad);
-          btn.title = sub;
-          btn.dataset.sub = sub;
-          btn.addEventListener('click', () => {
-            toggleSetMember(filters.topics, sub);
-            refreshTopicButtonStates();
-            render();
-          });
-          subWrap.appendChild(btn);
-        });
-        group.appendChild(subWrap);
-      }
+      row.addEventListener('click', ev => {
+        if (ev.target.closest('[data-role="cat-checkbox"]')) return;
+        if (subs.length === 1) {
+          toggleSetMember(filters.topics, subs[0].full);
+          refreshTopicButtonStates();
+          render();
+          return;
+        }
+        catEl.classList.toggle('open');
+      });
 
-      topicButtonsEl.appendChild(group);
+      topicButtonsEl.appendChild(catEl);
     });
+
+    refreshTopicButtonStates();
   }
 
   function refreshTopicButtonStates() {
-    topicButtonsEl.querySelectorAll('.sffp-subtopic-btn').forEach(b => {
-      b.classList.toggle('active', filters.topics.has(b.dataset.sub));
+    topicButtonsEl.querySelectorAll('.sffp-topic-cat').forEach(catEl => {
+      const broad = catEl.dataset.broad;
+      const fulls = topicGroups[broad] || [];
+      const selCount = fulls.filter(f => filters.topics.has(f)).length;
+      const catCb = catEl.querySelector('[data-role="cat-checkbox"]');
+      catCb.classList.toggle('checked', selCount > 0 && selCount === fulls.length);
+      catCb.classList.toggle('partial', selCount > 0 && selCount < fulls.length);
+      catEl.querySelectorAll('.sffp-topic-sub-row').forEach(subRow => {
+        subRow.querySelector('[data-role="sub-checkbox"]').classList.toggle('checked', filters.topics.has(subRow.dataset.sub));
+      });
     });
-    topicButtonsEl.querySelectorAll('.sffp-topic-broad-btn').forEach(b => {
-      const subs = topicGroups[b.dataset.broad] || [];
-      const selected = subs.filter(s => filters.topics.has(s)).length;
-      b.classList.toggle('active', selected > 0 && selected === subs.length);
-      b.classList.toggle('partial', selected > 0 && selected < subs.length);
+
+    topicSelectedChipsEl.innerHTML = '';
+    Array.from(filters.topics).forEach(full => {
+      const broad = broadTopic(full);
+      const singleMember = (topicGroups[broad] || []).length === 1;
+      const label = singleMember ? broad : subtopicLabel(full, broad);
+      const chip = document.createElement('span');
+      chip.className = 'sffp-topic-selected-chip';
+      chip.innerHTML = `${escapeHtml(label)} <button type="button" aria-label="Remove ${escapeHtml(label)}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>`;
+      chip.querySelector('button').addEventListener('click', () => {
+        filters.topics.delete(full);
+        refreshTopicButtonStates();
+        render();
+      });
+      topicSelectedChipsEl.appendChild(chip);
     });
+
+    topicClearBtn.style.display = filters.topics.size ? 'inline-block' : 'none';
+    topicSummaryTagEl.textContent = filters.topics.size ? `${filters.topics.size} selected` : 'Any';
+    topicSummaryTagEl.classList.toggle('active', filters.topics.size > 0);
   }
 
   function buildTypeButtons() {
@@ -1055,11 +1191,11 @@ document.addEventListener('DOMContentLoaded', function () {
         card.style.background = colors.bg;
         card.style.borderColor = colors.border;
         if (isMulti) {
-          card.innerHTML = `<div class="sffp-stacked-room-name">${escapeHtml(room)}</div><div class="sffp-stacked-title"><i class="fa-solid fa-thumbtack" aria-hidden="true"></i> Poster Session</div><div class="sffp-stacked-speaker">${matchingItems.length} of ${block.items.length} posters</div>`;
+          card.innerHTML = `<div class="sffp-stacked-title"><i class="fa-solid fa-thumbtack" aria-hidden="true"></i> Poster Session</div><div class="sffp-stacked-speaker">${matchingItems.length} of ${block.items.length} posters</div><div class="sffp-stacked-room-name"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(room)}</div>`;
           card.addEventListener('click', () => openPosterListModal(block, matchingItems.length ? matchingItems : block.items));
         } else {
           const e = rep;
-          card.innerHTML = `<div class="sffp-stacked-room-name">${escapeHtml(room)}</div><div class="sffp-stacked-title">${escapeHtml(e.title)}</div><div class="sffp-stacked-speaker">${escapeHtml(e.speakerName || '')}</div>`;
+          card.innerHTML = `<div class="sffp-stacked-title">${escapeHtml(e.title)}</div>${e.speakerName ? `<div class="sffp-stacked-speaker"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> ${escapeHtml(e.speakerName)}</div>` : ''}<div class="sffp-stacked-room-name"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(room)}</div>`;
           card.addEventListener('click', () => openEventModal(e));
         }
         roomsWrap.appendChild(card);
@@ -1186,6 +1322,11 @@ document.addEventListener('DOMContentLoaded', function () {
   // ------------------------------------------------------------
   // Top-level controls
   // ------------------------------------------------------------
+  topicClearBtn.addEventListener('click', () => {
+    filters.topics.clear();
+    refreshTopicButtonStates();
+    render();
+  });
   viewListBtn.addEventListener('click', () => {
     currentView = 'list';
     viewListBtn.classList.add('active');
@@ -1201,13 +1342,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   sortSelectEl.addEventListener('change', () => { sortMode = sortSelectEl.value; render(); });
 
-  gridLayoutCheckboxEl.checked = gridLayoutMode === 'stacked';
+  gridLayoutCheckboxEl.checked = gridLayoutMode === 'grid';
   gridLayoutCheckboxEl.addEventListener('change', () => {
-    gridLayoutMode = gridLayoutCheckboxEl.checked ? 'stacked' : 'grid';
+    gridLayoutMode = gridLayoutCheckboxEl.checked ? 'grid' : 'stacked';
     render();
   });
 
-  resetFiltersBtn.addEventListener('click', () => {
+  resetFiltersBtn.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
     filters.day = currentView === 'grid' ? filters.gridDay : 'all';
     filters.rooms.clear();
     filters.topics.clear();
