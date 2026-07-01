@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SFF2026 Technical Program</title>
+</head>
+<body>
+
+<div class="sffp-container" id="sffp-container">
+
+  <div class="sffp-topbar">
+    <div class="sffp-date-info" id="sffp-dateInfo">Loading...</div>
+    <div class="sffp-search-icon" id="sffp-searchIcon" role="button" aria-label="Search" tabindex="0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </div>
+  </div>
+
+  <div class="sffp-search-container" id="sffp-searchContainer" style="display:none;">
+    <div class="sffp-search-input-wrapper">
+      <input type="text" id="sffp-searchInput" class="sffp-search-input" placeholder="Search titles, speakers, companies, keywords...">
+      <button type="button" id="sffp-clearSearchBtn" class="sffp-clear-search-btn">✕</button>
+    </div>
+    <div id="sffp-searchResultsInfo" class="sffp-search-results-info"></div>
+  </div>
+
+  <div class="sffp-view-toggle" id="sffp-viewToggle">
+    <button type="button" class="sffp-view-btn active" data-view="list" id="sffp-viewListBtn">
+      <span class="sffp-view-btn-icon">☰</span> Schedule List
+    </button>
+    <button type="button" class="sffp-view-btn" data-view="grid" id="sffp-viewGridBtn">
+      <span class="sffp-view-btn-icon">▦</span> Time Grid — See What's Concurrent
+    </button>
+  </div>
+
+  <div class="sffp-filters">
+    <div class="sffp-filter-row">
+      <div class="sffp-filter-group">
+        <div class="sffp-filter-label">Day</div>
+        <div class="sffp-filter-buttons" id="sffp-dayButtons"></div>
+      </div>
+      <div class="sffp-filter-group" id="sffp-roomFilterGroup">
+        <div class="sffp-filter-label">Room</div>
+        <div class="sffp-filter-buttons" id="sffp-roomButtons"></div>
+      </div>
+    </div>
+    <div class="sffp-filter-row">
+      <div class="sffp-filter-group">
+        <div class="sffp-filter-label">Topic Area</div>
+        <div class="sffp-filter-buttons" id="sffp-topicButtons"></div>
+      </div>
+      <div class="sffp-filter-group">
+        <div class="sffp-filter-label">Presentation Type</div>
+        <div class="sffp-filter-buttons" id="sffp-typeButtons"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sffp-toolbar">
+    <div class="sffp-toolbar-left">
+      <div class="sffp-sort-container" id="sffp-sortContainer">
+        <label for="sffp-sortSelect">Sort by</label>
+        <select id="sffp-sortSelect">
+          <option value="time">Time</option>
+          <option value="room">Room</option>
+          <option value="speaker">Speaker (A–Z)</option>
+          <option value="topic">Topic Area</option>
+        </select>
+      </div>
+      <div class="sffp-grid-layout-toggle" id="sffp-gridLayoutToggle" style="display:none;">
+        <span class="sffp-slider-label">Grid</span>
+        <label class="sffp-toggle-slider">
+          <input type="checkbox" id="sffp-gridLayoutCheckbox">
+          <span class="sffp-slider"></span>
+        </label>
+        <span class="sffp-slider-label">Stacked List</span>
+      </div>
+    </div>
+    <button type="button" id="sffp-resetFiltersBtn" class="sffp-reset-btn">Reset Filters</button>
+  </div>
+
+  <div class="sffp-legend" id="sffp-legend"></div>
+
+  <div class="sffp-grid-day-note" id="sffp-gridDayNote" style="display:none;"></div>
+
+  <div class="sffp-schedule-list" id="sffp-scheduleList"></div>
+  <div class="sffp-schedule-grid-wrap" id="sffp-scheduleGridWrap" style="display:none;"></div>
+
+  <div class="sffp-no-events" id="sffp-noEvents" style="display:none;">No sessions found with the current filters.</div>
+  <div class="sffp-loading" id="sffp-loading">Loading technical program...</div>
+  <div class="sffp-error" id="sffp-error" style="display:none;">Error loading program data. Please try again later.</div>
+
+</div>
+
+<div class="sffp-modal-overlay" id="sffp-modalOverlay">
+  <div class="sffp-modal" id="sffp-modal" role="dialog" aria-modal="true" aria-labelledby="sffp-modalTitleHeading">
+    <button type="button" class="sffp-modal-close" id="sffp-modalClose" aria-label="Close">✕</button>
+    <div id="sffp-modalContent"></div>
+  </div>
+</div>
+
+<style>
+  .sffp-container {
+    --sffp-ink: #2a2a2a;
+    --sffp-muted: #6b6b6b;
+    --sffp-line: #e2ddd2;
+    --sffp-paper: #fdfcfa;
+    --sffp-accent: #1f5c8a;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--sffp-ink);
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 15px 40px;
+    box-sizing: border-box;
+  }
+  .sffp-container *, .sffp-container *::before, .sffp-container *::after { box-sizing: border-box; }
+
+  .sffp-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .sffp-date-info { font-style: italic; color: var(--sffp-muted); font-size: 13px; }
+  .sffp-search-icon { cursor: pointer; color: var(--sffp-muted); padding: 6px; border-radius: 6px; transition: background .15s, color .15s; }
+  .sffp-search-icon:hover, .sffp-search-icon:focus { background: #f0ede6; color: var(--sffp-ink); outline: none; }
+
+  .sffp-search-container { margin-bottom: 14px; }
+  .sffp-search-input-wrapper { display: flex; align-items: center; border: 1px solid var(--sffp-line); border-radius: 8px; background: var(--sffp-paper); padding: 4px 4px 4px 12px; }
+  .sffp-search-input { flex: 1; border: none; outline: none; background: transparent; padding: 8px 4px; font-size: 14px; font-family: inherit; }
+  .sffp-clear-search-btn { border: none; background: #f0ede6; color: var(--sffp-muted); width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 12px; }
+  .sffp-clear-search-btn:hover { background: #e2ddd2; }
+  .sffp-search-results-info { font-size: 12px; color: var(--sffp-muted); margin-top: 6px; padding-left: 4px; }
+
+  .sffp-view-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+  .sffp-view-btn {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 11px 14px; border-radius: 8px; border: 1.5px solid var(--sffp-line);
+    background: var(--sffp-paper); color: var(--sffp-muted); font-size: 13.5px; font-weight: 600;
+    cursor: pointer; font-family: inherit; transition: all .15s;
+  }
+  .sffp-view-btn-icon { font-size: 15px; }
+  .sffp-view-btn:hover { border-color: var(--sffp-accent); color: var(--sffp-ink); }
+  .sffp-view-btn.active { background: var(--sffp-accent); border-color: var(--sffp-accent); color: #fff; }
+
+  .sffp-filters { background: #f8f6f1; border: 1px solid var(--sffp-line); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
+  .sffp-filter-row { display: flex; gap: 24px; flex-wrap: wrap; }
+  .sffp-filter-row + .sffp-filter-row { margin-top: 12px; }
+  .sffp-filter-group { flex: 1; min-width: 220px; }
+  .sffp-filter-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--sffp-muted); margin-bottom: 7px; }
+  .sffp-filter-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sffp-filter-btn {
+    padding: 6px 12px; border-radius: 20px; border: 1.5px solid var(--sffp-line); background: #fff;
+    font-size: 12.5px; color: var(--sffp-ink); cursor: pointer; font-family: inherit; transition: all .12s; line-height: 1.3;
+  }
+  .sffp-filter-btn:hover { border-color: var(--sffp-accent); }
+  .sffp-filter-btn.active { background: var(--sffp-accent); border-color: var(--sffp-accent); color: #fff; }
+
+  .sffp-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .sffp-toolbar-left { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .sffp-sort-container { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--sffp-muted); }
+  .sffp-sort-container select { padding: 5px 8px; border-radius: 6px; border: 1px solid var(--sffp-line); font-family: inherit; font-size: 12.5px; background: #fff; }
+  .sffp-grid-layout-toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--sffp-muted); }
+  .sffp-toggle-slider { position: relative; display: inline-block; width: 38px; height: 20px; }
+  .sffp-toggle-slider input { opacity: 0; width: 0; height: 0; }
+  .sffp-slider { position: absolute; cursor: pointer; inset: 0; background: var(--sffp-line); border-radius: 20px; transition: .2s; }
+  .sffp-slider::before { content: ""; position: absolute; height: 14px; width: 14px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+  .sffp-toggle-slider input:checked + .sffp-slider { background: var(--sffp-accent); }
+  .sffp-toggle-slider input:checked + .sffp-slider::before { transform: translateX(18px); }
+  .sffp-reset-btn { padding: 7px 14px; border-radius: 7px; border: 1.5px solid var(--sffp-line); background: #fff; color: var(--sffp-muted); font-size: 12.5px; cursor: pointer; font-family: inherit; }
+  .sffp-reset-btn:hover { border-color: #c0392b; color: #c0392b; }
+
+  .sffp-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 18px; padding: 0 2px; }
+  .sffp-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--sffp-muted); }
+  .sffp-legend-swatch { width: 12px; height: 12px; border-radius: 3px; border: 1.5px solid; flex-shrink: 0; }
+
+  .sffp-grid-day-note { font-size: 12.5px; color: var(--sffp-muted); background: #eef5fb; border: 1px solid #cfe3f2; padding: 8px 12px; border-radius: 7px; margin-bottom: 12px; }
+
+  /* ---- List view ---- */
+  .sffp-day-section { margin-bottom: 26px; }
+  .sffp-day-header {
+    font-size: 16px; font-weight: 700; color: var(--sffp-ink); padding: 8px 0; margin-bottom: 12px;
+    border-bottom: 2px solid var(--sffp-ink);
+  }
+  .sffp-day-content { display: flex; flex-direction: column; gap: 10px; }
+
+  .sffp-event-card {
+    border: 1.5px solid; border-radius: 9px; padding: 12px 14px; cursor: pointer; transition: box-shadow .15s, transform .1s;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .sffp-event-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .sffp-event-card:active { transform: scale(0.997); }
+  .sffp-event-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .sffp-event-time { font-size: 12px; font-weight: 700; color: var(--sffp-ink); white-space: nowrap; }
+  .sffp-event-title { font-size: 14.5px; font-weight: 600; line-height: 1.35; }
+  .sffp-event-meta { font-size: 12px; color: var(--sffp-muted); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+  .sffp-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+  .sffp-badge {
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
+    padding: 2px 8px; border-radius: 20px; background: rgba(0,0,0,0.06); color: var(--sffp-ink);
+  }
+  .sffp-badge-student { background: #fff2e6; color: #8a4c1f; }
+  .sffp-badge-invited { background: #fff9e6; color: #8a7a1f; }
+  .sffp-badge-poster { background: #e6f4ff; color: #1f5c8a; }
+
+  /* ---- Grid (Room x Time) view ---- */
+  .sffp-grid-scroll { overflow-x: auto; border: 1px solid var(--sffp-line); border-radius: 10px; }
+  table.sffp-grid-table { border-collapse: collapse; width: 100%; min-width: 600px; }
+  table.sffp-grid-table th, table.sffp-grid-table td { border: 1px solid var(--sffp-line); vertical-align: top; }
+  table.sffp-grid-table thead th {
+    position: sticky; top: 0; background: #f8f6f1; z-index: 2; padding: 10px 8px; font-size: 12px;
+    font-weight: 700; color: var(--sffp-ink); text-align: center; white-space: nowrap;
+  }
+  table.sffp-grid-table thead th.sffp-time-col-head { text-align: left; background: #efeadf; z-index: 3; left: 0; position: sticky; }
+  table.sffp-grid-table td.sffp-time-col {
+    position: sticky; left: 0; background: #f8f6f1; font-size: 11.5px; font-weight: 700; color: var(--sffp-muted);
+    padding: 8px; white-space: nowrap; z-index: 1;
+  }
+  table.sffp-grid-table td.sffp-cell { padding: 4px; min-width: 150px; }
+  .sffp-grid-mini-card {
+    border: 1.5px solid; border-radius: 7px; padding: 7px 8px; cursor: pointer; font-size: 12px; line-height: 1.3; transition: box-shadow .15s;
+    height: 100%;
+  }
+  .sffp-grid-mini-card:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+  .sffp-grid-mini-title { font-weight: 600; margin-bottom: 2px; }
+  .sffp-grid-mini-speaker { color: var(--sffp-muted); font-size: 11px; }
+  .sffp-grid-empty-cell { color: #ccc; text-align: center; font-size: 11px; padding: 10px 0; }
+
+  /* ---- Grid stacked (mobile-friendly) alt layout ---- */
+  .sffp-stacked-time-block { margin-bottom: 18px; }
+  .sffp-stacked-time-header {
+    font-size: 13px; font-weight: 700; color: #fff; background: var(--sffp-accent);
+    padding: 6px 12px; border-radius: 6px; margin-bottom: 8px; display: inline-block;
+  }
+  .sffp-stacked-rooms { display: flex; flex-direction: column; gap: 8px; }
+  .sffp-stacked-room-card {
+    border: 1.5px solid; border-radius: 8px; padding: 10px 12px; cursor: pointer; display: flex; flex-direction: column; gap: 3px;
+  }
+  .sffp-stacked-room-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--sffp-muted); }
+  .sffp-stacked-title { font-size: 13.5px; font-weight: 600; }
+  .sffp-stacked-speaker { font-size: 12px; color: var(--sffp-muted); }
+
+  .sffp-no-events, .sffp-loading, .sffp-error { text-align: center; padding: 40px 20px; color: var(--sffp-muted); font-size: 14px; }
+  .sffp-error { color: #b02a2a; }
+
+  /* ---- Modal ---- */
+  .sffp-modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(20,18,14,0.55); z-index: 1000;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .sffp-modal-overlay.open { display: flex; }
+  .sffp-modal {
+    background: #fff; border-radius: 12px; max-width: 640px; width: 100%; max-height: 85vh; overflow-y: auto;
+    padding: 28px 26px 26px; position: relative; box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #2a2a2a;
+  }
+  .sffp-modal-close {
+    position: absolute; top: 14px; right: 14px; border: none; background: #f0ede6; width: 30px; height: 30px;
+    border-radius: 50%; cursor: pointer; font-size: 13px; color: #6b6b6b;
+  }
+  .sffp-modal-close:hover { background: #e2ddd2; }
+  .sffp-modal-title { font-size: 19px; font-weight: 700; line-height: 1.35; margin: 4px 30px 10px 0; }
+  .sffp-modal-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .sffp-modal-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; font-size: 13px; margin-bottom: 16px; padding: 12px 14px; background: #f8f6f1; border-radius: 8px; }
+  .sffp-modal-meta-label { font-weight: 700; color: #6b6b6b; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+  .sffp-modal-section { margin-bottom: 14px; }
+  .sffp-modal-section-label { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: #6b6b6b; margin-bottom: 5px; }
+  .sffp-modal-body-text { font-size: 13.5px; line-height: 1.6; color: #333; }
+  .sffp-modal-poster-list { display: flex; flex-direction: column; gap: 6px; max-height: 55vh; overflow-y: auto; }
+  .sffp-modal-poster-row { border: 1px solid #e2ddd2; border-radius: 7px; padding: 9px 11px; cursor: pointer; }
+  .sffp-modal-poster-row:hover { background: #f8f6f1; }
+  .sffp-modal-poster-row-title { font-size: 13.5px; font-weight: 600; }
+  .sffp-modal-poster-row-speaker { font-size: 12px; color: #6b6b6b; margin-top: 2px; }
+  .sffp-modal-back-link { display: inline-block; font-size: 12.5px; color: #1f5c8a; cursor: pointer; margin-bottom: 12px; font-weight: 600; }
+  .sffp-modal-back-link:hover { text-decoration: underline; }
+
+  @media (max-width: 680px) {
+    .sffp-filter-row { flex-direction: column; gap: 14px; }
+    .sffp-view-btn { font-size: 12px; padding: 10px 8px; }
+    .sffp-toolbar { flex-direction: column; align-items: stretch; }
+    .sffp-modal { padding: 22px 18px 20px; max-height: 90vh; }
+    .sffp-modal-meta-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  // ============================================================
+  // CONFIG
+  // Relative path — resolves correctly whether this file sits at the
+  // root of a GitHub Pages repo or in a subfolder on tms.org, as long
+  // as index.html and SFF2026-Program.xlsx live in the same folder.
+  // If tms.org ever hosts the .xlsx somewhere else, swap this for an
+  // absolute URL instead.
+  // ============================================================
+  const DATA_URL = 'SFF2026-Program.xlsx';
+
+  // Columns pulled from the sheet but intentionally NEVER rendered anywhere:
+  // "Speaker's ID", "SesOrder", "Academic Status" — internal use only.
+
+  const ROOM_ORDER = ['Room One','Room Two','Room Three','Room Four','Room Five','Room Six','Room Seven','Room Eight','Room Nine','Room Ten','Ballroom Foyer'];
+
+  const TOPIC_COLORS = {
+    'Materials':            { bg: '#ffe6e6', border: '#ffb3b3', text: '#8a2c2c' },
+    'Process Development':  { bg: '#e6f4ff', border: '#b3d7ff', text: '#1f5c8a' },
+    'Applications':         { bg: '#e6fff2', border: '#b3ffd6', text: '#1f7a4d' },
+    'Modeling':             { bg: '#f0e6ff', border: '#d6b3ff', text: '#5a2c8a' },
+    'Special Session':      { bg: '#fff2e6', border: '#ffccb3', text: '#8a4c1f' },
+    'Other':                { bg: '#f5f0e8', border: '#d4c4a8', text: '#6b5a3d' }
+  };
+
+  const TYPE_LABELS = {
+    'Oral': 'Oral',
+    'StudentOral': 'Student Oral',
+    'Poster': 'Poster',
+    'StudentPoster': 'Student Poster',
+    'Invited': 'Invited'
+  };
+
+  // ------------------------------------------------------------
+  // DOM refs
+  // ------------------------------------------------------------
+  const el = id => document.getElementById(id);
+  const dayButtonsEl = el('sffp-dayButtons');
+  const roomButtonsEl = el('sffp-roomButtons');
+  const roomFilterGroupEl = el('sffp-roomFilterGroup');
+  const topicButtonsEl = el('sffp-topicButtons');
+  const typeButtonsEl = el('sffp-typeButtons');
+  const dateInfoEl = el('sffp-dateInfo');
+  const loadingEl = el('sffp-loading');
+  const errorEl = el('sffp-error');
+  const noEventsEl = el('sffp-noEvents');
+  const scheduleListEl = el('sffp-scheduleList');
+  const scheduleGridWrapEl = el('sffp-scheduleGridWrap');
+  const legendEl = el('sffp-legend');
+  const gridDayNoteEl = el('sffp-gridDayNote');
+  const sortSelectEl = el('sffp-sortSelect');
+  const sortContainerEl = el('sffp-sortContainer');
+  const gridLayoutToggleEl = el('sffp-gridLayoutToggle');
+  const gridLayoutCheckboxEl = el('sffp-gridLayoutCheckbox');
+  const resetFiltersBtn = el('sffp-resetFiltersBtn');
+  const searchIcon = el('sffp-searchIcon');
+  const searchContainer = el('sffp-searchContainer');
+  const searchInput = el('sffp-searchInput');
+  const clearSearchBtn = el('sffp-clearSearchBtn');
+  const searchResultsInfo = el('sffp-searchResultsInfo');
+  const viewListBtn = el('sffp-viewListBtn');
+  const viewGridBtn = el('sffp-viewGridBtn');
+  const modalOverlay = el('sffp-modalOverlay');
+  const modalContent = el('sffp-modalContent');
+  const modalClose = el('sffp-modalClose');
+
+  // ------------------------------------------------------------
+  // State
+  // ------------------------------------------------------------
+  let events = [];       // flat list of talks/posters
+  let blocks = [];       // grouped by dateKey+startMinutes+room
+  let lastUpdated = '';
+  let currentView = 'list';          // 'list' | 'grid'
+  let gridLayoutMode = window.innerWidth <= 700 ? 'stacked' : 'grid'; // for grid view only
+  let sortMode = 'time';
+  let searchQuery = '';
+  let isSearchActive = false;
+
+  const filters = {
+    day: 'all',              // dateKey or 'all'
+    gridDay: null,            // dateKey used specifically when currentView === 'grid'
+    rooms: new Set(),         // empty = all
+    topics: new Set(),        // empty = all
+    types: new Set()          // empty = all
+  };
+
+  // ------------------------------------------------------------
+  // Fetch + parse
+  // ------------------------------------------------------------
+  fetchProgramData();
+
+  async function fetchProgramData() {
+    loadingEl.style.display = 'block';
+    errorEl.style.display = 'none';
+    noEventsEl.style.display = 'none';
+
+    try {
+      const response = await fetch(`${DATA_URL}?v=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0' }
+      });
+      if (!response.ok) throw new Error('Network response was not ok');
+
+      const buf = await response.arrayBuffer();
+      const workbook = XLSX.read(new Uint8Array(buf), { cellDates: true });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+      events = rows.map(rowToEvent).filter(e => e.dateKey && e.room);
+      buildBlocks();
+
+      lastUpdated = new Date().toLocaleDateString();
+      dateInfoEl.textContent = `Current as of ${lastUpdated}`;
+
+      loadingEl.style.display = 'none';
+      buildDayButtons();
+      buildRoomButtons();
+      buildTopicButtons();
+      buildTypeButtons();
+      buildLegend();
+      setupSearch();
+      render();
+    } catch (err) {
+      loadingEl.style.display = 'none';
+      errorEl.style.display = 'block';
+      console.error('Error fetching program data:', err);
+    }
+  }
+
+  function rowToEvent(row) {
+    const dateVal = toDate(row['Date']);
+    const startMinutes = excelTimeToMinutes(row['StartTime']);
+    const duration = Number(row['Duration']) || 0;
+    const topicArea = String(row['Topic Area'] || '').trim();
+    return {
+      dateKey: dateVal ? formatDateKey(dateVal) : '',
+      dateLabel: dateVal ? formatDateLabel(dateVal) : '',
+      startMinutes,
+      endMinutes: startMinutes + duration,
+      room: String(row['RoomName'] || '').trim(),
+      topicArea,
+      broadTopic: broadTopic(topicArea),
+      sessionName: String(row['Session Name'] || '').trim(),
+      abstractNumber: row['Abstract Number'],
+      abstractType: String(row['Abstract Type'] || '').trim(),
+      title: String(row['Abstract Title'] || 'Untitled').trim(),
+      speakerName: String(row["Speaker's Name"] || '').trim(),
+      speakerCompany: String(row["Speaker's Company"] || '').trim(),
+      authors: String(row['All Authors and Affiliations'] || '').trim(),
+      abstract: String(row['Abstract'] || '').trim()
+    };
+  }
+
+  function buildBlocks() {
+    const map = new Map();
+    events.forEach(e => {
+      const key = `${e.dateKey}|${e.startMinutes}|${e.room}`;
+      if (!map.has(key)) {
+        map.set(key, {
+          key, dateKey: e.dateKey, dateLabel: e.dateLabel,
+          startMinutes: e.startMinutes, endMinutes: e.endMinutes,
+          room: e.room, items: []
+        });
+      }
+      const b = map.get(key);
+      b.items.push(e);
+      b.endMinutes = Math.max(b.endMinutes, e.endMinutes);
+    });
+    blocks = Array.from(map.values());
+    blocks.forEach(b => b.items.sort((a, c) => (Number(a.abstractNumber) || 0) - (Number(c.abstractNumber) || 0)));
+  }
+
+  // ------------------------------------------------------------
+  // Date / time helpers
+  // ------------------------------------------------------------
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function toDate(v) {
+    if (v instanceof Date) return v;
+    if (typeof v === 'number') return XLSX.SSF ? excelSerialToDate(v) : null;
+    if (typeof v === 'string' && v) { const d = new Date(v); return isNaN(d) ? null : d; }
+    return null;
+  }
+
+  function excelSerialToDate(serial) {
+    const utcDays = Math.floor(serial - 25569);
+    const utcMs = utcDays * 86400 * 1000;
+    return new Date(utcMs);
+  }
+
+  function formatDateKey(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
+  function formatDateLabel(d) { return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }); }
+
+  function excelTimeToMinutes(v) {
+    if (v instanceof Date) return v.getHours() * 60 + v.getMinutes();
+    if (typeof v === 'number') return Math.round(v * 24 * 60);
+    if (typeof v === 'string' && v) {
+      const m = v.match(/^(\d{1,2}):(\d{2})(?::\d{2})?\s*(AM|PM)?$/i);
+      if (m) {
+        let h = parseInt(m[1], 10); const min = parseInt(m[2], 10); const ampm = m[3];
+        if (ampm) { if (/pm/i.test(ampm) && h !== 12) h += 12; if (/am/i.test(ampm) && h === 12) h = 0; }
+        return h * 60 + min;
+      }
+    }
+    return 0;
+  }
+
+  function minutesToLabel(mins) {
+    let h = Math.floor(mins / 60); const m = mins % 60;
+    const ampm = h >= 12 ? 'PM' : 'AM'; let hh = h % 12; hh = hh || 12;
+    return `${hh}:${pad(m)} ${ampm}`;
+  }
+
+  function broadTopic(topic) {
+    if (!topic) return 'Other';
+    if (topic.startsWith('Special Session')) return 'Special Session';
+    if (topic.startsWith('Materials')) return 'Materials';
+    if (topic.startsWith('Process Development')) return 'Process Development';
+    if (topic.startsWith('Applications')) return 'Applications';
+    if (topic.startsWith('Modeling')) return 'Modeling';
+    return 'Other';
+  }
+
+  function roomSortIndex(room) { const i = ROOM_ORDER.indexOf(room); return i === -1 ? 999 : i; }
+
+  function getUniqueDays() {
+    const map = new Map();
+    events.forEach(e => { if (!map.has(e.dateKey)) map.set(e.dateKey, e.dateLabel); });
+    return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0])).map(([dateKey, dateLabel]) => ({ dateKey, dateLabel }));
+  }
+
+  // ------------------------------------------------------------
+  // Filter builders
+  // ------------------------------------------------------------
+  function buildDayButtons() {
+    dayButtonsEl.innerHTML = '';
+    const days = getUniqueDays();
+
+    const allBtn = document.createElement('button');
+    allBtn.type = 'button';
+    allBtn.className = 'sffp-filter-btn active';
+    allBtn.textContent = 'All Days';
+    allBtn.dataset.day = 'all';
+    allBtn.addEventListener('click', () => setDayFilter('all', allBtn));
+    dayButtonsEl.appendChild(allBtn);
+
+    days.forEach(d => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sffp-filter-btn';
+      btn.textContent = d.dateLabel.split(',').slice(0, 2).join(',');
+      btn.dataset.day = d.dateKey;
+      btn.addEventListener('click', () => setDayFilter(d.dateKey, btn));
+      dayButtonsEl.appendChild(btn);
+    });
+
+    if (days.length) filters.gridDay = days[0].dateKey;
+  }
+
+  function setDayFilter(dateKey, btn) {
+    filters.day = dateKey;
+    if (dateKey !== 'all') filters.gridDay = dateKey;
+    dayButtonsEl.querySelectorAll('.sffp-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  }
+
+  function buildRoomButtons() {
+    roomButtonsEl.innerHTML = '';
+    const rooms = Array.from(new Set(events.map(e => e.room))).sort((a, b) => roomSortIndex(a) - roomSortIndex(b));
+    rooms.forEach(room => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sffp-filter-btn';
+      btn.textContent = room;
+      btn.dataset.room = room;
+      btn.addEventListener('click', () => {
+        toggleSetMember(filters.rooms, room);
+        btn.classList.toggle('active');
+        render();
+      });
+      roomButtonsEl.appendChild(btn);
+    });
+  }
+
+  function buildTopicButtons() {
+    topicButtonsEl.innerHTML = '';
+    const topics = Object.keys(TOPIC_COLORS).filter(t => events.some(e => e.broadTopic === t));
+    topics.forEach(topic => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sffp-filter-btn';
+      btn.textContent = topic;
+      btn.dataset.topic = topic;
+      btn.addEventListener('click', () => {
+        toggleSetMember(filters.topics, topic);
+        btn.classList.toggle('active');
+        render();
+      });
+      topicButtonsEl.appendChild(btn);
+    });
+  }
+
+  function buildTypeButtons() {
+    typeButtonsEl.innerHTML = '';
+    const types = Array.from(new Set(events.map(e => e.abstractType))).filter(Boolean);
+    types.forEach(type => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sffp-filter-btn';
+      btn.textContent = TYPE_LABELS[type] || type;
+      btn.dataset.type = type;
+      btn.addEventListener('click', () => {
+        toggleSetMember(filters.types, type);
+        btn.classList.toggle('active');
+        render();
+      });
+      typeButtonsEl.appendChild(btn);
+    });
+  }
+
+  function toggleSetMember(set, value) { set.has(value) ? set.delete(value) : set.add(value); }
+
+  function buildLegend() {
+    legendEl.innerHTML = '';
+    Object.keys(TOPIC_COLORS).filter(t => events.some(e => e.broadTopic === t)).forEach(topic => {
+      const c = TOPIC_COLORS[topic];
+      const item = document.createElement('div');
+      item.className = 'sffp-legend-item';
+      item.innerHTML = `<span class="sffp-legend-swatch" style="background:${c.bg};border-color:${c.border}"></span><span>${topic}</span>`;
+      legendEl.appendChild(item);
+    });
+    const note = document.createElement('div');
+    note.className = 'sffp-legend-item';
+    note.innerHTML = `<span>🎓 Student presentation &nbsp;·&nbsp; ⭐ Invited &nbsp;·&nbsp; 📌 Poster session</span>`;
+    legendEl.appendChild(note);
+  }
+
+  // ------------------------------------------------------------
+  // Search
+  // ------------------------------------------------------------
+  function setupSearch() {
+    searchIcon.addEventListener('click', toggleSearch);
+    searchIcon.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggleSearch(); } });
+    clearSearchBtn.addEventListener('click', clearSearch);
+    searchInput.addEventListener('input', () => { searchQuery = searchInput.value.trim().toLowerCase(); render(); });
+  }
+
+  function toggleSearch() {
+    isSearchActive = !isSearchActive;
+    searchContainer.style.display = isSearchActive ? 'block' : 'none';
+    if (isSearchActive) searchInput.focus(); else clearSearch();
+  }
+
+  function clearSearch() {
+    searchQuery = '';
+    searchInput.value = '';
+    searchResultsInfo.textContent = '';
+    render();
+  }
+
+  function eventMatchesSearch(e) {
+    if (!searchQuery) return true;
+    const hay = [e.title, e.speakerName, e.speakerCompany, e.authors, e.abstract, e.sessionName, e.room, e.topicArea].join(' ').toLowerCase();
+    return hay.includes(searchQuery);
+  }
+
+  // ------------------------------------------------------------
+  // Filter matching
+  // ------------------------------------------------------------
+  function eventMatchesFilters(e, opts) {
+    opts = opts || {};
+    if (!opts.ignoreDay) {
+      if (filters.day !== 'all' && e.dateKey !== filters.day) return false;
+    }
+    if (filters.rooms.size && !filters.rooms.has(e.room)) return false;
+    if (filters.topics.size && !filters.topics.has(e.broadTopic)) return false;
+    if (filters.types.size && !filters.types.has(e.abstractType)) return false;
+    if (!eventMatchesSearch(e)) return false;
+    return true;
+  }
+
+  // ------------------------------------------------------------
+  // Render dispatcher
+  // ------------------------------------------------------------
+  function render() {
+    if (currentView === 'list') {
+      scheduleListEl.style.display = 'flex';
+      scheduleGridWrapEl.style.display = 'none';
+      gridDayNoteEl.style.display = 'none';
+      sortContainerEl.style.display = 'flex';
+      gridLayoutToggleEl.style.display = 'none';
+      roomFilterGroupEl.style.display = '';
+      renderListView();
+    } else {
+      scheduleListEl.style.display = 'none';
+      scheduleGridWrapEl.style.display = 'block';
+      gridDayNoteEl.style.display = 'block';
+      sortContainerEl.style.display = 'none';
+      gridLayoutToggleEl.style.display = 'flex';
+      renderGridView();
+    }
+    updateSearchResultsInfo();
+  }
+
+  function updateSearchResultsInfo() {
+    if (!isSearchActive || !searchQuery) { searchResultsInfo.textContent = ''; return; }
+    const count = currentView === 'list' ? lastListCount : lastGridCount;
+    searchResultsInfo.textContent = `${count} result${count === 1 ? '' : 's'} for "${searchQuery}"`;
+  }
+
+  let lastListCount = 0;
+  let lastGridCount = 0;
+
+  // ------------------------------------------------------------
+  // LIST VIEW
+  // ------------------------------------------------------------
+  function renderListView() {
+    scheduleListEl.innerHTML = '';
+
+    const visibleBlocks = blocks.filter(b => b.items.some(e => eventMatchesFilters(e)));
+    lastListCount = visibleBlocks.reduce((sum, b) => sum + b.items.filter(e => eventMatchesFilters(e)).length, 0);
+
+    if (!visibleBlocks.length) { noEventsEl.style.display = 'block'; return; }
+    noEventsEl.style.display = 'none';
+
+    const byDay = {};
+    visibleBlocks.forEach(b => { (byDay[b.dateKey] = byDay[b.dateKey] || []).push(b); });
+
+    Object.keys(byDay).sort().forEach(dateKey => {
+      const dayBlocks = sortBlocks(byDay[dateKey]);
+      const section = document.createElement('div');
+      section.className = 'sffp-day-section';
+      const header = document.createElement('div');
+      header.className = 'sffp-day-header';
+      header.textContent = dayBlocks[0].dateLabel;
+      section.appendChild(header);
+      const content = document.createElement('div');
+      content.className = 'sffp-day-content';
+      dayBlocks.forEach(b => content.appendChild(createBlockCard(b)));
+      section.appendChild(content);
+      scheduleListEl.appendChild(section);
+    });
+  }
+
+  function sortBlocks(list) {
+    const repFor = b => b.items.find(e => eventMatchesFilters(e)) || b.items[0];
+    const sorted = [...list];
+    if (sortMode === 'time') sorted.sort((a, b) => a.startMinutes - b.startMinutes || roomSortIndex(a.room) - roomSortIndex(b.room));
+    else if (sortMode === 'room') sorted.sort((a, b) => roomSortIndex(a.room) - roomSortIndex(b.room) || a.startMinutes - b.startMinutes);
+    else if (sortMode === 'speaker') sorted.sort((a, b) => (repFor(a).speakerName || '').localeCompare(repFor(b).speakerName || ''));
+    else if (sortMode === 'topic') sorted.sort((a, b) => repFor(a).broadTopic.localeCompare(repFor(b).broadTopic) || a.startMinutes - b.startMinutes);
+    return sorted;
+  }
+
+  function createBlockCard(block) {
+    const matchingItems = block.items.filter(e => eventMatchesFilters(e));
+    const isMulti = block.items.length > 1;
+
+    if (isMulti) {
+      const rep = matchingItems[0] || block.items[0];
+      const colors = TOPIC_COLORS[rep.broadTopic] || TOPIC_COLORS.Other;
+      const card = document.createElement('div');
+      card.className = 'sffp-event-card';
+      card.style.background = colors.bg;
+      card.style.borderColor = colors.border;
+      card.innerHTML = `
+        <div class="sffp-event-top">
+          <div class="sffp-event-time">${minutesToLabel(block.startMinutes)} – ${minutesToLabel(block.endMinutes)}</div>
+        </div>
+        <div class="sffp-event-title">📌 Poster Session — ${matchingItems.length} of ${block.items.length} posters</div>
+        <div class="sffp-event-meta"><span>${block.room}</span></div>
+      `;
+      card.addEventListener('click', () => openPosterListModal(block, matchingItems.length ? matchingItems : block.items));
+      return card;
+    }
+
+    const e = matchingItems[0] || block.items[0];
+    return createEventCard(e);
+  }
+
+  function createEventCard(e) {
+    const colors = TOPIC_COLORS[e.broadTopic] || TOPIC_COLORS.Other;
+    const card = document.createElement('div');
+    card.className = 'sffp-event-card';
+    card.style.background = colors.bg;
+    card.style.borderColor = colors.border;
+    card.innerHTML = `
+      <div class="sffp-event-top">
+        <div class="sffp-event-time">${minutesToLabel(e.startMinutes)} – ${minutesToLabel(e.endMinutes)}</div>
+      </div>
+      <div class="sffp-event-title">${escapeHtml(e.title)}</div>
+      <div class="sffp-event-meta">
+        <span>📍 ${escapeHtml(e.room)}</span>
+        ${e.speakerName ? `<span>🎤 ${escapeHtml(e.speakerName)}</span>` : ''}
+      </div>
+      ${typeBadgesHtml(e)}
+    `;
+    card.addEventListener('click', () => openEventModal(e));
+    return card;
+  }
+
+  function typeBadgesHtml(e) {
+    let badges = `<div class="sffp-badges">`;
+    if (e.abstractType === 'StudentOral' || e.abstractType === 'StudentPoster') badges += `<span class="sffp-badge sffp-badge-student">🎓 ${TYPE_LABELS[e.abstractType]}</span>`;
+    else if (e.abstractType === 'Invited') badges += `<span class="sffp-badge sffp-badge-invited">⭐ Invited</span>`;
+    else if (e.abstractType) badges += `<span class="sffp-badge">${TYPE_LABELS[e.abstractType] || e.abstractType}</span>`;
+    badges += `<span class="sffp-badge">${escapeHtml(e.broadTopic)}</span>`;
+    badges += `</div>`;
+    return badges;
+  }
+
+  // ------------------------------------------------------------
+  // GRID VIEW (Room x Time — concurrent sessions)
+  // ------------------------------------------------------------
+  function renderGridView() {
+    scheduleGridWrapEl.innerHTML = '';
+
+    const dayKey = filters.day !== 'all' ? filters.day : filters.gridDay;
+    const days = getUniqueDays();
+    const activeDay = days.find(d => d.dateKey === dayKey) || days[0];
+    if (!activeDay) { noEventsEl.style.display = 'block'; return; }
+
+    gridDayNoteEl.textContent = `Showing concurrent sessions for ${activeDay.dateLabel}. Use the Day filter above to switch days — every room's session at the same time slot is a concurrent option.`;
+
+    let dayBlocks = blocks.filter(b => b.dateKey === activeDay.dateKey);
+    dayBlocks = dayBlocks.filter(b => b.items.some(e => eventMatchesFilters(e, { ignoreDay: true })));
+
+    lastGridCount = dayBlocks.reduce((sum, b) => sum + b.items.filter(e => eventMatchesFilters(e, { ignoreDay: true })).length, 0);
+
+    if (!dayBlocks.length) { noEventsEl.style.display = 'block'; return; }
+    noEventsEl.style.display = 'none';
+
+    let rooms = Array.from(new Set(dayBlocks.map(b => b.room))).sort((a, b) => roomSortIndex(a) - roomSortIndex(b));
+    const times = Array.from(new Set(dayBlocks.map(b => b.startMinutes))).sort((a, b) => a - b);
+
+    const blockMap = new Map();
+    dayBlocks.forEach(b => blockMap.set(`${b.startMinutes}|${b.room}`, b));
+
+    if (gridLayoutMode === 'grid') {
+      renderGridTable(rooms, times, blockMap);
+    } else {
+      renderGridStacked(rooms, times, blockMap);
+    }
+  }
+
+  function renderGridTable(rooms, times, blockMap) {
+    const wrap = document.createElement('div');
+    wrap.className = 'sffp-grid-scroll';
+    const table = document.createElement('table');
+    table.className = 'sffp-grid-table';
+
+    const thead = document.createElement('thead');
+    const headRow = document.createElement('tr');
+    headRow.innerHTML = `<th class="sffp-time-col-head">Time</th>` + rooms.map(r => `<th>${escapeHtml(r)}</th>`).join('');
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    times.forEach(t => {
+      const tr = document.createElement('tr');
+      const timeTd = document.createElement('td');
+      timeTd.className = 'sffp-time-col';
+      timeTd.textContent = minutesToLabel(t);
+      tr.appendChild(timeTd);
+
+      rooms.forEach(room => {
+        const td = document.createElement('td');
+        td.className = 'sffp-cell';
+        const block = blockMap.get(`${t}|${room}`);
+        if (block) {
+          td.appendChild(buildMiniCard(block));
+        } else {
+          td.innerHTML = `<div class="sffp-grid-empty-cell">—</div>`;
+        }
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    scheduleGridWrapEl.appendChild(wrap);
+  }
+
+  function buildMiniCard(block) {
+    const matchingItems = block.items.filter(e => eventMatchesFilters(e, { ignoreDay: true }));
+    const isMulti = block.items.length > 1;
+    const rep = matchingItems[0] || block.items[0];
+    const colors = TOPIC_COLORS[rep.broadTopic] || TOPIC_COLORS.Other;
+    const card = document.createElement('div');
+    card.className = 'sffp-grid-mini-card';
+    card.style.background = colors.bg;
+    card.style.borderColor = colors.border;
+    if (isMulti) {
+      card.innerHTML = `<div class="sffp-grid-mini-title">📌 Poster Session</div><div class="sffp-grid-mini-speaker">${matchingItems.length} of ${block.items.length} posters</div>`;
+      card.addEventListener('click', () => openPosterListModal(block, matchingItems.length ? matchingItems : block.items));
+    } else {
+      const e = rep;
+      card.innerHTML = `<div class="sffp-grid-mini-title">${escapeHtml(e.title)}</div><div class="sffp-grid-mini-speaker">${escapeHtml(e.speakerName || '')}</div>`;
+      card.addEventListener('click', () => openEventModal(e));
+    }
+    return card;
+  }
+
+  function renderGridStacked(rooms, times, blockMap) {
+    const container = document.createElement('div');
+    times.forEach(t => {
+      const activeRooms = rooms.filter(r => blockMap.has(`${t}|${r}`));
+      if (!activeRooms.length) return;
+      const section = document.createElement('div');
+      section.className = 'sffp-stacked-time-block';
+      section.innerHTML = `<div class="sffp-stacked-time-header">${minutesToLabel(t)}</div>`;
+      const roomsWrap = document.createElement('div');
+      roomsWrap.className = 'sffp-stacked-rooms';
+      activeRooms.forEach(room => {
+        const block = blockMap.get(`${t}|${room}`);
+        const matchingItems = block.items.filter(e => eventMatchesFilters(e, { ignoreDay: true }));
+        const isMulti = block.items.length > 1;
+        const rep = matchingItems[0] || block.items[0];
+        const colors = TOPIC_COLORS[rep.broadTopic] || TOPIC_COLORS.Other;
+        const card = document.createElement('div');
+        card.className = 'sffp-stacked-room-card';
+        card.style.background = colors.bg;
+        card.style.borderColor = colors.border;
+        if (isMulti) {
+          card.innerHTML = `<div class="sffp-stacked-room-name">${escapeHtml(room)}</div><div class="sffp-stacked-title">📌 Poster Session</div><div class="sffp-stacked-speaker">${matchingItems.length} of ${block.items.length} posters</div>`;
+          card.addEventListener('click', () => openPosterListModal(block, matchingItems.length ? matchingItems : block.items));
+        } else {
+          const e = rep;
+          card.innerHTML = `<div class="sffp-stacked-room-name">${escapeHtml(room)}</div><div class="sffp-stacked-title">${escapeHtml(e.title)}</div><div class="sffp-stacked-speaker">${escapeHtml(e.speakerName || '')}</div>`;
+          card.addEventListener('click', () => openEventModal(e));
+        }
+        roomsWrap.appendChild(card);
+      });
+      section.appendChild(roomsWrap);
+      container.appendChild(section);
+    });
+    scheduleGridWrapEl.appendChild(container);
+  }
+
+  // ------------------------------------------------------------
+  // Modal
+  // ------------------------------------------------------------
+  function escapeHtml(str) {
+    return String(str || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function openEventModal(e) {
+    modalContent.innerHTML = `
+      <div class="sffp-modal-title" id="sffp-modalTitleHeading">${escapeHtml(e.title)}</div>
+      ${typeBadgesHtml(e).replace('sffp-badges', 'sffp-badges sffp-modal-badges')}
+      <div class="sffp-modal-meta-grid">
+        <div><div class="sffp-modal-meta-label">Day</div><div>${escapeHtml(e.dateLabel)}</div></div>
+        <div><div class="sffp-modal-meta-label">Time</div><div>${minutesToLabel(e.startMinutes)} – ${minutesToLabel(e.endMinutes)}</div></div>
+        <div><div class="sffp-modal-meta-label">Room</div><div>${escapeHtml(e.room)}</div></div>
+        <div><div class="sffp-modal-meta-label">Session</div><div>${escapeHtml(e.sessionName || '—')}</div></div>
+        <div><div class="sffp-modal-meta-label">Topic Area</div><div>${escapeHtml(e.topicArea || '—')}</div></div>
+      </div>
+      ${e.speakerName ? `<div class="sffp-modal-section"><div class="sffp-modal-section-label">Speaker</div><div class="sffp-modal-body-text">${escapeHtml(e.speakerName)}${e.speakerCompany ? ', ' + escapeHtml(e.speakerCompany) : ''}</div></div>` : ''}
+      ${e.authors ? `<div class="sffp-modal-section"><div class="sffp-modal-section-label">All Authors &amp; Affiliations</div><div class="sffp-modal-body-text">${escapeHtml(e.authors)}</div></div>` : ''}
+      ${e.abstract ? `<div class="sffp-modal-section"><div class="sffp-modal-section-label">Abstract</div><div class="sffp-modal-body-text">${escapeHtml(e.abstract).replace(/\n/g, '<br>')}</div></div>` : ''}
+    `;
+    openModal();
+  }
+
+  function openPosterListModal(block, items, fromStacked) {
+    const rows = items.map((e, i) => `
+      <div class="sffp-modal-poster-row" data-idx="${i}">
+        <div class="sffp-modal-poster-row-title">${escapeHtml(e.title)}</div>
+        <div class="sffp-modal-poster-row-speaker">${escapeHtml(e.speakerName || '')}${e.speakerCompany ? ', ' + escapeHtml(e.speakerCompany) : ''}</div>
+      </div>`).join('');
+    modalContent.innerHTML = `
+      <div class="sffp-modal-title" id="sffp-modalTitleHeading">📌 Poster Session — ${items.length} Posters</div>
+      <div class="sffp-modal-meta-grid">
+        <div><div class="sffp-modal-meta-label">Day</div><div>${escapeHtml(block.dateLabel)}</div></div>
+        <div><div class="sffp-modal-meta-label">Time</div><div>${minutesToLabel(block.startMinutes)} – ${minutesToLabel(block.endMinutes)}</div></div>
+        <div><div class="sffp-modal-meta-label">Room</div><div>${escapeHtml(block.room)}</div></div>
+      </div>
+      <div class="sffp-modal-poster-list">${rows}</div>
+    `;
+    modalContent.querySelectorAll('.sffp-modal-poster-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const idx = Number(row.dataset.idx);
+        openEventModal(items[idx]);
+        const back = document.createElement('div');
+        back.className = 'sffp-modal-back-link';
+        back.textContent = '← Back to poster list';
+        back.addEventListener('click', () => openPosterListModal(block, items));
+        modalContent.prepend(back);
+      });
+    });
+    openModal();
+  }
+
+  function openModal() { modalOverlay.classList.add('open'); }
+  function closeModal() { modalOverlay.classList.remove('open'); modalContent.innerHTML = ''; }
+
+  modalClose.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', ev => { if (ev.target === modalOverlay) closeModal(); });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') closeModal(); });
+
+  // ------------------------------------------------------------
+  // Top-level controls
+  // ------------------------------------------------------------
+  viewListBtn.addEventListener('click', () => {
+    currentView = 'list';
+    viewListBtn.classList.add('active');
+    viewGridBtn.classList.remove('active');
+    render();
+  });
+  viewGridBtn.addEventListener('click', () => {
+    currentView = 'grid';
+    viewGridBtn.classList.add('active');
+    viewListBtn.classList.remove('active');
+    render();
+  });
+
+  sortSelectEl.addEventListener('change', () => { sortMode = sortSelectEl.value; render(); });
+
+  gridLayoutCheckboxEl.checked = gridLayoutMode === 'stacked';
+  gridLayoutCheckboxEl.addEventListener('change', () => {
+    gridLayoutMode = gridLayoutCheckboxEl.checked ? 'stacked' : 'grid';
+    render();
+  });
+
+  resetFiltersBtn.addEventListener('click', () => {
+    filters.day = 'all';
+    filters.rooms.clear();
+    filters.topics.clear();
+    filters.types.clear();
+    searchQuery = '';
+    searchInput.value = '';
+    clearSearch();
+    dayButtonsEl.querySelectorAll('.sffp-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.day === 'all'));
+    roomButtonsEl.querySelectorAll('.sffp-filter-btn').forEach(b => b.classList.remove('active'));
+    topicButtonsEl.querySelectorAll('.sffp-filter-btn').forEach(b => b.classList.remove('active'));
+    typeButtonsEl.querySelectorAll('.sffp-filter-btn').forEach(b => b.classList.remove('active'));
+    render();
+  });
+
+});
+</script>
+
+</body>
+</html>
