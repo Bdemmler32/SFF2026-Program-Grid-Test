@@ -1067,13 +1067,18 @@ document.addEventListener('DOMContentLoaded', function () {
     return card;
   }
 
-  function typeBadgesHtml(e) {
+  function typeBadgesHtml(e, opts) {
+    opts = opts || {};
     let badges = `<div class="sffp-badges">`;
     if (e.abstractType === 'StudentOral' || e.abstractType === 'StudentPoster') badges += `<span class="sffp-badge"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> ${TYPE_LABELS[e.abstractType]}</span>`;
     else if (e.abstractType === 'Invited') badges += `<span class="sffp-badge"><i class="fa-solid fa-star" aria-hidden="true"></i> Invited</span>`;
     else if (e.abstractType) badges += `<span class="sffp-badge">${TYPE_LABELS[e.abstractType] || e.abstractType}</span>`;
-    const topicColors = TOPIC_COLORS[e.broadTopic] || TOPIC_COLORS.Other;
-    badges += `<span class="sffp-badge sffp-badge-topic" style="--topic-color-strong:${topicColors.border};--topic-color-text:${topicColors.text}">${escapeHtml(e.broadTopic)}</span>`;
+    if (opts.colorTopic) {
+      const topicColors = TOPIC_COLORS[e.broadTopic] || TOPIC_COLORS.Other;
+      badges += `<span class="sffp-badge sffp-badge-topic" style="--topic-color-strong:${topicColors.border};--topic-color-text:${topicColors.text}">${escapeHtml(e.broadTopic)}</span>`;
+    } else {
+      badges += `<span class="sffp-badge">${escapeHtml(e.broadTopic)}</span>`;
+    }
     badges += `</div>`;
     return badges;
   }
@@ -1270,7 +1275,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function openEventModal(e) {
     modalContent.innerHTML = `
       <div class="sffp-modal-title" id="sffp-modalTitleHeading">${escapeHtml(e.title)}</div>
-      ${typeBadgesHtml(e).replace('sffp-badges', 'sffp-badges sffp-modal-badges')}
+      ${typeBadgesHtml(e, { colorTopic: true }).replace('sffp-badges', 'sffp-badges sffp-modal-badges')}
       <div class="sffp-modal-meta-grid">
         <div><div class="sffp-modal-meta-label">Day</div><div>${escapeHtml(e.dateLabel)}</div></div>
         <div><div class="sffp-modal-meta-label">Time</div><div>${minutesToLabel(e.startMinutes)} – ${minutesToLabel(e.endMinutes)}</div></div>
