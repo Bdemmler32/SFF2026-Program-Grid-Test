@@ -292,11 +292,10 @@
   .sffp-event-meta i { width: 16px; text-align: center; }
   .sffp-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
   .sffp-badge {
-    font-weight: 700; padding: 4px 12px; border-radius: 20px; background: rgba(0,0,0,0.06); color: var(--sffp-ink);
+    font-weight: 700; padding: 4px 12px; border-radius: 20px; background: #f0ede6; color: var(--sffp-ink);
     display: inline-flex; align-items: center; gap: 6px;
   }
-  .sffp-badge-student { background: #fff2e6; color: #8a4c1f; }
-  .sffp-badge-invited { background: #fff9e6; color: #8a7a1f; }
+  .sffp-badge-topic { background: var(--topic-color-strong, #f0ede6); color: var(--topic-color-text, var(--sffp-ink)); }
 
   /* ---- Grid (Room x Time) view ---- */
   .sffp-grid-scroll { overflow: auto; max-height: 65vh; border: 1px solid var(--sffp-line); border-radius: 10px; position: relative; }
@@ -888,6 +887,8 @@ document.addEventListener('DOMContentLoaded', function () {
       legendEl.appendChild(item);
     });
     const iconNotes = [
+      ['fa-location-dot', 'Room'],
+      ['fa-user', 'Speaker'],
       ['fa-graduation-cap', 'Student presentation'],
       ['fa-star', 'Invited'],
       ['fa-thumbtack', 'Poster session']
@@ -1058,7 +1059,7 @@ document.addEventListener('DOMContentLoaded', function () {
       <div class="sffp-event-title">${escapeHtml(e.title)}</div>
       <div class="sffp-event-meta">
         <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(e.room)}</span>
-        ${e.speakerName ? `<span><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> ${escapeHtml(e.speakerName)}</span>` : ''}
+        ${e.speakerName ? `<span><i class="fa-solid fa-user" aria-hidden="true"></i> ${escapeHtml(e.speakerName)}</span>` : ''}
       </div>
       ${typeBadgesHtml(e)}
     `;
@@ -1068,10 +1069,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function typeBadgesHtml(e) {
     let badges = `<div class="sffp-badges">`;
-    if (e.abstractType === 'StudentOral' || e.abstractType === 'StudentPoster') badges += `<span class="sffp-badge sffp-badge-student"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> ${TYPE_LABELS[e.abstractType]}</span>`;
-    else if (e.abstractType === 'Invited') badges += `<span class="sffp-badge sffp-badge-invited"><i class="fa-solid fa-star" aria-hidden="true"></i> Invited</span>`;
+    if (e.abstractType === 'StudentOral' || e.abstractType === 'StudentPoster') badges += `<span class="sffp-badge"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> ${TYPE_LABELS[e.abstractType]}</span>`;
+    else if (e.abstractType === 'Invited') badges += `<span class="sffp-badge"><i class="fa-solid fa-star" aria-hidden="true"></i> Invited</span>`;
     else if (e.abstractType) badges += `<span class="sffp-badge">${TYPE_LABELS[e.abstractType] || e.abstractType}</span>`;
-    badges += `<span class="sffp-badge">${escapeHtml(e.broadTopic)}</span>`;
+    const topicColors = TOPIC_COLORS[e.broadTopic] || TOPIC_COLORS.Other;
+    badges += `<span class="sffp-badge sffp-badge-topic" style="--topic-color-strong:${topicColors.border};--topic-color-text:${topicColors.text}">${escapeHtml(e.broadTopic)}</span>`;
     badges += `</div>`;
     return badges;
   }
@@ -1195,7 +1197,7 @@ document.addEventListener('DOMContentLoaded', function () {
           card.addEventListener('click', () => openPosterListModal(block, matchingItems.length ? matchingItems : block.items));
         } else {
           const e = rep;
-          card.innerHTML = `<div class="sffp-stacked-title">${escapeHtml(e.title)}</div>${e.speakerName ? `<div class="sffp-stacked-speaker"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> ${escapeHtml(e.speakerName)}</div>` : ''}<div class="sffp-stacked-room-name"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(room)}</div>`;
+          card.innerHTML = `<div class="sffp-stacked-title">${escapeHtml(e.title)}</div>${e.speakerName ? `<div class="sffp-stacked-speaker"><i class="fa-solid fa-user" aria-hidden="true"></i> ${escapeHtml(e.speakerName)}</div>` : ''}<div class="sffp-stacked-room-name"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(room)}</div>`;
           card.addEventListener('click', () => openEventModal(e));
         }
         roomsWrap.appendChild(card);
@@ -1312,8 +1314,25 @@ document.addEventListener('DOMContentLoaded', function () {
     openModal();
   }
 
-  function openModal() { modalOverlay.classList.add('open'); }
-  function closeModal() { modalOverlay.classList.remove('open'); modalContent.innerHTML = ''; }
+  let lockedScrollY = 0;
+
+  function openModal() {
+    lockedScrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${lockedScrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    modalOverlay.classList.add('open');
+  }
+  function closeModal() {
+    modalOverlay.classList.remove('open');
+    modalContent.innerHTML = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    window.scrollTo(0, lockedScrollY);
+  }
 
   modalClose.addEventListener('click', closeModal);
   modalOverlay.addEventListener('click', ev => { if (ev.target === modalOverlay) closeModal(); });
