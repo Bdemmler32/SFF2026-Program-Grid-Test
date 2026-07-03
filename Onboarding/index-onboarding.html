@@ -124,23 +124,18 @@
 
 <div class="sffp-tour-overlay" id="sffp-tourOverlay">
   <div class="sffp-tour-modal" role="dialog" aria-modal="true" aria-labelledby="sffp-tourTitle">
-    <button type="button" class="sffp-tour-close" id="sffp-tourCloseBtn" aria-label="Close tour"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
-
     <div class="sffp-tour-stage" id="sffp-tourStage">
 
       <!-- Step 0: Welcome -->
       <div class="sffp-tour-scene" data-step="0">
-        <div class="sffp-tour-scene-welcome">
-          <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
-        </div>
+        <img src="SFF2026-graphic.jpg" alt="SFF2026" class="sffp-tour-welcome-img">
       </div>
 
       <!-- Step 1: Two views -->
       <div class="sffp-tour-scene" data-step="1">
         <div class="sffp-tour-scene-views">
-          <div class="sffp-tour-pill">Concurrent Schedule</div>
-          <div class="sffp-tour-pill">Schedule List</div>
-          <div class="sffp-tour-pill-highlight"></div>
+          <div class="sffp-tour-mockbtn sffp-tour-mockbtn-a"><i class="fa-solid fa-table-cells" aria-hidden="true"></i> Concurrent Schedule</div>
+          <div class="sffp-tour-mockbtn sffp-tour-mockbtn-b"><i class="fa-solid fa-list" aria-hidden="true"></i> Schedule List</div>
         </div>
       </div>
 
@@ -161,7 +156,7 @@
       <!-- Step 3: Filters & Key -->
       <div class="sffp-tour-scene" data-step="3">
         <div class="sffp-tour-scene-filters">
-          <div class="sffp-tour-filters-bar"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i> Filters &amp; Key</div>
+          <div class="sffp-tour-filters-bar"><span>Filters &amp; Key</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></div>
           <div class="sffp-tour-filters-chips">
             <div class="sffp-tour-chip sffp-tour-chip-1">Day</div>
             <div class="sffp-tour-chip sffp-tour-chip-2">Room</div>
@@ -181,7 +176,10 @@
         <div class="sffp-tour-scene-search">
           <div class="sffp-tour-search-bar">
             <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-            <span class="sffp-tour-search-text">lattice</span>
+            <span class="sffp-tour-search-typed">
+              <span class="sffp-tour-search-word sffp-tour-search-word-1">Lattice</span>
+              <span class="sffp-tour-search-word sffp-tour-search-word-2">Multi-Agent</span>
+            </span>
             <span class="sffp-tour-search-cursor"></span>
           </div>
         </div>
@@ -199,10 +197,7 @@
       <!-- Step 6: Jump to Now -->
       <div class="sffp-tour-scene" data-step="6">
         <div class="sffp-tour-scene-jump">
-          <div class="sffp-tour-clock">
-            <i class="fa-solid fa-clock" aria-hidden="true"></i>
-            <div class="sffp-tour-clock-ring"></div>
-          </div>
+          <div class="sffp-tour-jump-btn"><i class="fa-solid fa-clock" aria-hidden="true"></i> Jump to Now</div>
           <div class="sffp-tour-timeline">
             <div class="sffp-tour-timeline-track"></div>
             <div class="sffp-tour-timeline-marker"></div>
@@ -268,6 +263,13 @@
 </div>
 
 <style>
+  :root {
+    --sffp-ink: #2a2a2a;
+    --sffp-muted: #5f5f5f;
+    --sffp-line: #e2ddd2;
+    --sffp-paper: #fdfcfa;
+    --sffp-accent: #1f5c8a;
+  }
   .sffp-container {
     --sffp-ink: #2a2a2a;
     --sffp-muted: #5f5f5f;
@@ -558,11 +560,6 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 16px; color: #2a2a2a; text-align: center;
   }
-  .sffp-tour-close {
-    position: absolute; top: 14px; right: 14px; border: none; background: #f0ede6; width: 32px; height: 32px;
-    border-radius: 50%; cursor: pointer; color: #6b6b6b;
-  }
-  .sffp-tour-close:hover { background: #e2ddd2; }
 
   .sffp-tour-stage {
     height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
@@ -594,17 +591,20 @@
   .sffp-tour-next-btn:hover { opacity: 0.9; }
 
   /* ---- Scene 0: Welcome ---- */
-  .sffp-tour-scene-welcome i { font-size: 52px; color: var(--sffp-accent); animation: sffpTourPulse 2s ease-in-out infinite; }
-  @keyframes sffpTourPulse { 0%, 100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.1); opacity: 1; } }
+  .sffp-tour-welcome-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; }
 
   /* ---- Scene 1: Two views ---- */
-  .sffp-tour-scene-views { position: relative; display: flex; gap: 8px; padding: 6px; background: #fff; border-radius: 24px; border: 1px solid var(--sffp-line); }
-  .sffp-tour-pill { padding: 9px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; color: #5f5f5f; position: relative; z-index: 1; white-space: nowrap; }
-  .sffp-tour-pill-highlight {
-    position: absolute; top: 6px; left: 6px; width: 46%; height: calc(100% - 12px); background: var(--sffp-accent);
-    border-radius: 20px; z-index: 0; animation: sffpTourSlidePill 3s ease-in-out infinite;
+  .sffp-tour-scene-views { display: flex; flex-direction: column; gap: 8px; width: 190px; }
+  .sffp-tour-mockbtn {
+    display: flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 12px; border-radius: 8px;
+    border: 1.5px solid var(--sffp-line); background: #fff; color: var(--sffp-muted); font-size: 12.5px; font-weight: 600;
   }
-  @keyframes sffpTourSlidePill { 0%, 40% { transform: translateX(0); } 50%, 90% { transform: translateX(105%); } 100% { transform: translateX(0); } }
+  .sffp-tour-mockbtn-a { animation: sffpTourBtnActive 3s ease-in-out infinite; }
+  .sffp-tour-mockbtn-b { animation: sffpTourBtnActive 3s ease-in-out infinite; animation-delay: 1.5s; }
+  @keyframes sffpTourBtnActive {
+    0%, 15% { background: var(--sffp-accent); border-color: var(--sffp-accent); color: #fff; }
+    50%, 100% { background: #fff; border-color: var(--sffp-line); color: var(--sffp-muted); }
+  }
 
   /* ---- Scene 2: Grid vs Stacked ---- */
   .sffp-tour-scene-layout { position: relative; width: 140px; height: 100px; }
@@ -612,7 +612,7 @@
   .sffp-tour-grid-layer { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; animation: sffpTourCrossfadeOut 4s ease-in-out infinite; }
   .sffp-tour-grid-layer div { background: #b3d7ff; border-radius: 3px; }
   .sffp-tour-stacked-layer { display: flex; flex-direction: column; gap: 6px; animation: sffpTourCrossfadeIn 4s ease-in-out infinite; }
-  .sffp-tour-stacked-layer div { flex: 1; background: #b3ffd6; border-radius: 4px; }
+  .sffp-tour-stacked-layer div { flex: 1; background: #d6b3ff; border-radius: 4px; }
   @keyframes sffpTourCrossfadeOut { 0%, 40% { opacity: 1; } 50%, 90% { opacity: 0; } 100% { opacity: 1; } }
   @keyframes sffpTourCrossfadeIn { 0%, 40% { opacity: 0; } 50%, 90% { opacity: 1; } 100% { opacity: 0; } }
 
@@ -620,7 +620,7 @@
   .sffp-tour-scene-filters { width: 200px; }
   .sffp-tour-filters-bar {
     background: #fff; border: 1px solid var(--sffp-line); border-radius: 8px; padding: 8px 12px; font-size: 12px;
-    font-weight: 700; text-align: left; display: flex; align-items: center; gap: 8px; color: #5f5f5f;
+    font-weight: 700; text-align: left; display: flex; align-items: center; justify-content: space-between; color: #5f5f5f;
   }
   .sffp-tour-filters-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; opacity: 0; animation: sffpTourFadeInHold 3s ease-in-out infinite; }
   .sffp-tour-chip { background: #fff; border: 1.5px solid var(--sffp-line); border-radius: 14px; padding: 4px 10px; font-size: 11px; font-weight: 600; color: #5f5f5f; }
@@ -636,12 +636,15 @@
     border-radius: 20px; padding: 9px 16px; width: 180px; overflow: hidden;
   }
   .sffp-tour-search-bar i { color: #8a8a8a; font-size: 13px; flex-shrink: 0; }
-  .sffp-tour-search-text {
-    font-size: 13px; color: #2a2a2a; white-space: nowrap; overflow: hidden; display: inline-block; width: 0;
-    animation: sffpTourType 3s steps(7) infinite;
+  .sffp-tour-search-typed { position: relative; height: 15px; display: inline-block; }
+  .sffp-tour-search-word {
+    position: absolute; top: 0; left: 0; white-space: nowrap; overflow: hidden; width: 0; display: inline-block;
+    font-size: 13px; color: #2a2a2a;
   }
+  .sffp-tour-search-word-1 { animation: sffpTourTypeWord 6s steps(7) infinite; }
+  .sffp-tour-search-word-2 { animation: sffpTourTypeWord 6s steps(11) infinite; animation-delay: 3s; }
+  @keyframes sffpTourTypeWord { 0% { width: 0; } 20%, 45% { width: 100%; } 50%, 100% { width: 0; } }
   .sffp-tour-search-cursor { width: 1.5px; height: 14px; background: var(--sffp-accent); animation: sffpTourBlink .8s step-end infinite; }
-  @keyframes sffpTourType { 0% { width: 0; } 40%, 70% { width: 7ch; } 95%, 100% { width: 0; } }
   @keyframes sffpTourBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
 
   /* ---- Scene 5: Sort by ---- */
@@ -655,14 +658,17 @@
   @keyframes sffpTourReorder3 { 0%, 40% { transform: translateY(0); } 55%, 100% { transform: translateY(-26px); } }
 
   /* ---- Scene 6: Jump to Now ---- */
-  .sffp-tour-scene-jump { display: flex; flex-direction: column; align-items: center; gap: 16px; }
-  .sffp-tour-clock { position: relative; display: flex; align-items: center; justify-content: center; }
-  .sffp-tour-clock i { font-size: 26px; color: var(--sffp-accent); position: relative; z-index: 1; }
-  .sffp-tour-clock-ring {
-    position: absolute; width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--sffp-accent);
-    animation: sffpTourRing 2s ease-out infinite;
+  .sffp-tour-scene-jump { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .sffp-tour-jump-btn {
+    display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--sffp-line);
+    background: #fff; color: var(--sffp-ink); font-weight: 600; font-size: 13px;
+    animation: sffpTourJumpPress 2.5s ease-in-out infinite;
   }
-  @keyframes sffpTourRing { 0% { width: 26px; height: 26px; opacity: 0.8; } 100% { width: 60px; height: 60px; opacity: 0; } }
+  @keyframes sffpTourJumpPress {
+    0%, 60% { transform: scale(1); background: #fff; border-color: var(--sffp-line); color: var(--sffp-ink); }
+    68% { transform: scale(0.93); background: var(--sffp-accent); border-color: var(--sffp-accent); color: #fff; }
+    78%, 100% { transform: scale(1); background: #fff; border-color: var(--sffp-line); color: var(--sffp-ink); }
+  }
   .sffp-tour-timeline { position: relative; width: 160px; height: 4px; }
   .sffp-tour-timeline-track { position: absolute; inset: 0; background: var(--sffp-line); border-radius: 4px; }
   .sffp-tour-timeline-marker {
@@ -804,7 +810,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const stickyHScrollInner = el('sffp-stickyHScrollInner');
   const tourHelpBtn = el('sffp-tourHelpBtn');
   const tourOverlay = el('sffp-tourOverlay');
-  const tourCloseBtn = el('sffp-tourCloseBtn');
   const tourStage = el('sffp-tourStage');
   const tourTitleEl = el('sffp-tourTitle');
   const tourTextEl = el('sffp-tourText');
@@ -1791,12 +1796,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function showTourStep(i) {
     currentTourStep = i;
+    const isLast = i === TOUR_STEPS.length - 1;
     tourScenes.forEach(scene => scene.classList.toggle('active', Number(scene.dataset.step) === i));
     tourTitleEl.textContent = TOUR_STEPS[i].title;
     tourTextEl.textContent = TOUR_STEPS[i].text;
     tourDotsEl.querySelectorAll('.sffp-tour-dot').forEach((dot, idx) => dot.classList.toggle('active', idx === i));
     tourBackBtn.disabled = i === 0;
-    tourNextBtn.textContent = i === TOUR_STEPS.length - 1 ? 'Done' : 'Next';
+    tourBackBtn.style.display = isLast ? 'none' : '';
+    tourSkipBtn.style.display = isLast ? 'none' : '';
+    tourNextBtn.textContent = isLast ? 'Close' : 'Next';
   }
 
   function markTourSeen() {
@@ -1820,7 +1828,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   tourHelpBtn.addEventListener('click', openTour);
-  tourCloseBtn.addEventListener('click', closeTour);
   tourSkipBtn.addEventListener('click', closeTour);
   tourOverlay.addEventListener('click', ev => { if (ev.target === tourOverlay) closeTour(); });
   tourBackBtn.addEventListener('click', () => { if (currentTourStep > 0) showTourStep(currentTourStep - 1); });
