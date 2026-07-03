@@ -12,8 +12,14 @@
 
   <div class="sffp-topbar">
     <div class="sffp-date-info" id="sffp-dateInfo">Loading...</div>
-    <div class="sffp-search-icon" id="sffp-searchIcon" role="button" aria-label="Search" tabindex="0">
-      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+    <div class="sffp-topbar-right">
+      <span class="sffp-jump-now-message" id="sffp-jumpNowMessage"></span>
+      <button type="button" class="sffp-jump-now-btn" id="sffp-jumpNowBtn">
+        <i class="fa-solid fa-clock" aria-hidden="true"></i> Jump to Now
+      </button>
+      <div class="sffp-search-icon" id="sffp-searchIcon" role="button" aria-label="Search" tabindex="0">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      </div>
     </div>
   </div>
 
@@ -26,17 +32,17 @@
   </div>
 
   <div class="sffp-view-toggle" id="sffp-viewToggle">
-    <button type="button" class="sffp-view-btn active" data-view="list" id="sffp-viewListBtn">
-      <i class="fa-solid fa-list" aria-hidden="true"></i> Schedule List
+    <button type="button" class="sffp-view-btn active" data-view="grid" id="sffp-viewGridBtn">
+      <i class="fa-solid fa-table-cells" aria-hidden="true"></i> Concurrent Schedule
     </button>
-    <button type="button" class="sffp-view-btn" data-view="grid" id="sffp-viewGridBtn">
-      <i class="fa-solid fa-table-cells" aria-hidden="true"></i> Concurrent Grid
+    <button type="button" class="sffp-view-btn" data-view="list" id="sffp-viewListBtn">
+      <i class="fa-solid fa-list" aria-hidden="true"></i> Schedule List
     </button>
   </div>
 
-  <details class="sffp-filters-outer">
+  <details class="sffp-filters-outer" id="sffp-filtersOuter">
     <summary class="sffp-filters-summary">
-      <span class="sffp-filters-summary-title">Filters</span>
+      <span class="sffp-filters-summary-title">Filters &amp; Key</span>
       <span class="sffp-filters-summary-right">
         <button type="button" id="sffp-resetFiltersBtn" class="sffp-reset-btn">Reset Filters</button>
         <i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i>
@@ -55,18 +61,18 @@
         </select>
       </div>
 
-      <details class="sffp-filter-dropdown">
+      <details class="sffp-filter-dropdown" id="sffp-dayDropdown">
         <summary><span>Day</span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
         <div class="sffp-filter-buttons" id="sffp-dayButtons"></div>
       </details>
 
-      <details class="sffp-filter-dropdown">
+      <details class="sffp-filter-dropdown" id="sffp-roomDropdown">
         <summary><span>Room</span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
         <div class="sffp-filter-buttons" id="sffp-roomButtons"></div>
       </details>
 
-      <details class="sffp-filter-dropdown">
-        <summary><span class="sffp-topic-summary-left">Topic Area <span class="sffp-topic-summary-tag" id="sffp-topicSummaryTag">Any</span></span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
+      <details class="sffp-filter-dropdown" id="sffp-topicDropdown">
+        <summary><span class="sffp-topic-summary-left">Topic Area <span class="sffp-topic-summary-tag" id="sffp-topicSummaryTag" style="display:none;"></span></span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
         <div class="sffp-topic-filter-tree">
           <div class="sffp-topic-tree-toolbar">
             <div class="sffp-topic-selected-chips" id="sffp-topicSelectedChips"></div>
@@ -76,12 +82,12 @@
         </div>
       </details>
 
-      <details class="sffp-filter-dropdown">
+      <details class="sffp-filter-dropdown" id="sffp-typeDropdown">
         <summary><span>Presentation Type</span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
         <div class="sffp-filter-buttons" id="sffp-typeButtons"></div>
       </details>
 
-      <details class="sffp-filter-dropdown">
+      <details class="sffp-filter-dropdown" id="sffp-keyDropdown">
         <summary><span>Color and Icon Key</span><i class="fa-solid fa-chevron-down sffp-chevron" aria-hidden="true"></i></summary>
         <div class="sffp-legend" id="sffp-legend"></div>
       </details>
@@ -91,12 +97,12 @@
 
   <div class="sffp-toolbar">
     <div class="sffp-grid-layout-toggle" id="sffp-gridLayoutToggle" style="display:none;">
-      <span class="sffp-slider-label">Stacked</span>
+      <span class="sffp-slider-label">Grid</span>
       <label class="sffp-toggle-slider">
         <input type="checkbox" id="sffp-gridLayoutCheckbox">
         <span class="sffp-slider"></span>
       </label>
-      <span class="sffp-slider-label">Grid</span>
+      <span class="sffp-slider-label">Stacked</span>
     </div>
   </div>
 
@@ -141,7 +147,15 @@
   .sffp-container button, .sffp-container input, .sffp-container select { font-size: 16px; font-family: inherit; }
 
   .sffp-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
-  .sffp-date-info { font-style: italic; color: var(--sffp-muted); font-size: 16px; }
+  .sffp-date-info { font-style: italic; font-weight: 700; color: var(--sffp-muted); font-size: 17px; }
+  .sffp-topbar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .sffp-jump-now-message { color: var(--sffp-muted); font-size: 14px; opacity: 0; transition: opacity .3s; }
+  .sffp-jump-now-message.visible { opacity: 1; }
+  .sffp-jump-now-btn {
+    display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 20px;
+    border: 1.5px solid var(--sffp-line); background: #fff; color: var(--sffp-ink); cursor: pointer; font-weight: 600;
+  }
+  .sffp-jump-now-btn:hover { border-color: var(--sffp-accent); color: var(--sffp-accent); }
   .sffp-search-icon { cursor: pointer; color: var(--sffp-muted); padding: 8px; border-radius: 6px; transition: background .15s, color .15s; font-size: 16px; line-height: 1; flex-shrink: 0; }
   .sffp-search-icon:hover, .sffp-search-icon:focus { background: #f0ede6; color: var(--sffp-ink); outline: none; }
 
@@ -198,8 +212,7 @@
   }
 
   .sffp-topic-summary-left { display: flex; align-items: center; gap: 10px; }
-  .sffp-topic-summary-tag { background: #f0ede6; color: var(--sffp-muted); border-radius: 20px; padding: 2px 10px; font-size: 13px; font-weight: 700; text-transform: none; letter-spacing: 0; }
-  .sffp-topic-summary-tag.active { background: var(--sffp-accent); color: #fff; }
+  .sffp-topic-summary-tag { background: var(--sffp-accent); color: #fff; border-radius: 20px; padding: 2px 10px; font-size: 13px; font-weight: 700; text-transform: none; letter-spacing: 0; }
 
   .sffp-topic-filter-tree { padding: 4px 14px 14px; }
   .sffp-topic-tree-toolbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
@@ -250,7 +263,7 @@
   .sffp-topic-sub-label { flex: 1; }
   .sffp-topic-sub-count { color: var(--sffp-muted); background: #f0ede6; padding: 1px 9px; border-radius: 20px; font-size: 13px; }
 
-  .sffp-toolbar { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .sffp-toolbar { display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
   .sffp-sort-container { display: flex; align-items: center; gap: 8px; color: var(--sffp-muted); }
   .sffp-sort-container select { padding: 6px 8px; border-radius: 6px; border: 1px solid var(--sffp-line); background: #fff; }
   .sffp-grid-layout-toggle { display: flex; align-items: center; gap: 8px; color: var(--sffp-muted); }
@@ -263,12 +276,15 @@
   .sffp-reset-btn { padding: 7px 14px; border-radius: 7px; border: 1.5px solid var(--sffp-line); background: #fff; color: var(--sffp-muted); cursor: pointer; font-size: 14px; }
   .sffp-reset-btn:hover { border-color: #c0392b; color: #c0392b; }
 
-  .sffp-legend { display: flex; flex-wrap: wrap; gap: 14px; }
+  .sffp-legend { display: flex; flex-direction: column; gap: 10px; }
+  .sffp-legend-row { display: flex; flex-wrap: wrap; gap: 14px; }
   .sffp-legend-item { display: flex; align-items: center; gap: 7px; color: var(--sffp-muted); }
   .sffp-legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid; flex-shrink: 0; }
   .sffp-legend-item i { color: var(--sffp-ink); width: 16px; text-align: center; }
 
   .sffp-grid-day-note { color: var(--sffp-muted); background: #eef5fb; border: 1px solid #cfe3f2; padding: 10px 14px; border-radius: 7px; margin-bottom: 12px; }
+  .sffp-day-filter-link { color: var(--sffp-accent); font-weight: 700; cursor: pointer; text-decoration: underline; }
+  .sffp-day-filter-link:hover { text-decoration: none; }
 
   /* ---- List view ---- */
   .sffp-schedule-list { display: flex; flex-direction: column; width: 100%; }
@@ -287,6 +303,7 @@
   .sffp-event-card:active { transform: scale(0.997); }
   .sffp-event-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
   .sffp-event-time { font-weight: 700; color: var(--sffp-ink); white-space: nowrap; }
+  .sffp-event-session { color: var(--sffp-muted); }
   .sffp-event-title { font-weight: 600; line-height: 1.35; }
   .sffp-event-meta { color: var(--sffp-muted); display: flex; flex-wrap: wrap; gap: 6px 16px; }
   .sffp-event-meta i { width: 16px; text-align: center; }
@@ -339,13 +356,6 @@
     padding: 7px 14px; border-radius: 6px; margin-bottom: 8px; display: inline-block;
   }
   .sffp-stacked-rooms { display: flex; flex-direction: column; gap: 8px; }
-  .sffp-stacked-room-card {
-    border: 1.5px solid; border-radius: 8px; padding: 12px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;
-  }
-  .sffp-stacked-title { font-weight: 700; }
-  .sffp-stacked-speaker { color: var(--sffp-muted); display: flex; align-items: center; gap: 6px; margin-top: 3px; }
-  .sffp-stacked-room-name { color: var(--sffp-muted); display: flex; align-items: center; gap: 6px; margin-top: 3px; font-weight: 600; }
-  .sffp-stacked-speaker i, .sffp-stacked-room-name i { width: 16px; text-align: center; }
 
   .sffp-no-events, .sffp-loading, .sffp-error { text-align: center; padding: 40px 20px; color: var(--sffp-muted); }
   .sffp-error { color: #b02a2a; }
@@ -428,6 +438,14 @@ document.addEventListener('DOMContentLoaded', function () {
     'Invited': 'Invited'
   };
 
+  const TYPE_ICONS = {
+    'Oral': 'fa-chalkboard-user',
+    'StudentOral': 'fa-graduation-cap',
+    'Poster': 'fa-thumbtack',
+    'StudentPoster': 'fa-graduation-cap',
+    'Invited': 'fa-star'
+  };
+
   // ------------------------------------------------------------
   // DOM refs
   // ------------------------------------------------------------
@@ -447,6 +465,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const scheduleGridWrapEl = el('sffp-scheduleGridWrap');
   const legendEl = el('sffp-legend');
   const gridDayNoteEl = el('sffp-gridDayNote');
+  const filtersOuterEl = el('sffp-filtersOuter');
+  const dayDropdownEl = el('sffp-dayDropdown');
+  const jumpNowBtn = el('sffp-jumpNowBtn');
+  const jumpNowMessageEl = el('sffp-jumpNowMessage');
   const sortSelectEl = el('sffp-sortSelect');
   const sortContainerEl = el('sffp-sortContainer');
   const gridLayoutToggleEl = el('sffp-gridLayoutToggle');
@@ -470,8 +492,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // ------------------------------------------------------------
   let events = [];       // flat list of talks/posters
   let blocks = [];       // grouped by dateKey+startMinutes+room
-  let currentView = 'list';          // 'list' | 'grid'
-  let gridLayoutMode = 'stacked'; // for grid view only — Stacked is the default
+  let currentView = 'grid';          // 'list' | 'grid' — Concurrent Schedule is the default view
+  let gridLayoutMode = 'grid'; // for grid view only — Grid is the default
   let sortMode = 'time';
   let searchQuery = '';
   let isSearchActive = false;
@@ -487,6 +509,41 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   const raf = window.requestAnimationFrame ? window.requestAnimationFrame.bind(window) : (fn => setTimeout(fn, 16));
+
+  // ------------------------------------------------------------
+  // Persist collapsible filter states across visits (localStorage).
+  // Wrapped in try/catch since some sandboxed preview environments block
+  // storage access entirely — the widget should degrade gracefully there,
+  // not error out. Works normally once deployed to a real page.
+  // ------------------------------------------------------------
+  const PERSISTED_DETAILS_IDS = ['sffp-filtersOuter', 'sffp-dayDropdown', 'sffp-roomDropdown', 'sffp-topicDropdown', 'sffp-typeDropdown', 'sffp-keyDropdown'];
+
+  function restoreDetailsStates() {
+    PERSISTED_DETAILS_IDS.forEach(id => {
+      const detailsEl = document.getElementById(id);
+      if (!detailsEl) return;
+      try {
+        const saved = window.localStorage.getItem('sffp-details-' + id);
+        if (saved !== null) detailsEl.open = saved === '1';
+      } catch (err) { /* storage unavailable — ignore, use markup default */ }
+      detailsEl.addEventListener('toggle', () => {
+        try { window.localStorage.setItem('sffp-details-' + id, detailsEl.open ? '1' : '0'); } catch (err) { /* ignore */ }
+      });
+    });
+  }
+  restoreDetailsStates();
+
+  // C4 helper: open the Filters panel + Day dropdown specifically (used by the
+  // "Day filter" link inside the Concurrent Schedule helper text).
+  function openFiltersAndDayDropdown() {
+    if (filtersOuterEl) filtersOuterEl.open = true;
+    if (dayDropdownEl) {
+      dayDropdownEl.open = true;
+      if (typeof dayDropdownEl.scrollIntoView === 'function') {
+        dayDropdownEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }
 
   // ------------------------------------------------------------
   // Fetch + parse
@@ -853,8 +910,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     topicClearBtn.style.display = filters.topics.size ? 'inline-block' : 'none';
-    topicSummaryTagEl.textContent = filters.topics.size ? `${filters.topics.size} selected` : 'Any';
-    topicSummaryTagEl.classList.toggle('active', filters.topics.size > 0);
+    if (filters.topics.size) {
+      topicSummaryTagEl.textContent = `${filters.topics.size} selected`;
+      topicSummaryTagEl.style.display = 'inline-block';
+    } else {
+      topicSummaryTagEl.textContent = '';
+      topicSummaryTagEl.style.display = 'none';
+    }
   }
 
   function buildTypeButtons() {
@@ -879,16 +941,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function buildLegend() {
     legendEl.innerHTML = '';
+
+    const swatchRow = document.createElement('div');
+    swatchRow.className = 'sffp-legend-row';
     Object.keys(TOPIC_COLORS).filter(t => events.some(e => e.broadTopic === t)).forEach(topic => {
       const c = TOPIC_COLORS[topic];
       const item = document.createElement('div');
       item.className = 'sffp-legend-item';
       item.innerHTML = `<span class="sffp-legend-swatch" style="background:${c.bg};border-color:${c.border}"></span><span>${topic}</span>`;
-      legendEl.appendChild(item);
+      swatchRow.appendChild(item);
     });
+    legendEl.appendChild(swatchRow);
+
+    const iconRow = document.createElement('div');
+    iconRow.className = 'sffp-legend-row';
     const iconNotes = [
       ['fa-location-dot', 'Room'],
       ['fa-user', 'Speaker'],
+      ['fa-chalkboard-user', 'Oral presentation'],
       ['fa-graduation-cap', 'Student presentation'],
       ['fa-star', 'Invited'],
       ['fa-thumbtack', 'Poster session']
@@ -897,8 +967,9 @@ document.addEventListener('DOMContentLoaded', function () {
       const item = document.createElement('div');
       item.className = 'sffp-legend-item';
       item.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${label}</span>`;
-      legendEl.appendChild(item);
+      iconRow.appendChild(item);
     });
+    legendEl.appendChild(iconRow);
   }
 
   // ------------------------------------------------------------
@@ -1010,17 +1081,27 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Best-effort surname extraction: last whitespace-separated token. Handles the
+  // vast majority of "First Last" names; won't be perfect for suffixes like "Jr."
+  // or multi-word surnames, but there's no reliable general solution without
+  // structured first/last-name columns in the source data.
+  function lastNameOf(fullName) {
+    const parts = (fullName || '').trim().split(/\s+/);
+    return parts[parts.length - 1] || '';
+  }
+
   function sortBlocks(list) {
     const repFor = b => b.items.find(e => eventMatchesFilters(e)) || b.items[0];
     const sorted = [...list];
     if (sortMode === 'time') sorted.sort((a, b) => a.startMinutes - b.startMinutes || roomSortIndex(a.room) - roomSortIndex(b.room));
     else if (sortMode === 'room') sorted.sort((a, b) => roomSortIndex(a.room) - roomSortIndex(b.room) || a.startMinutes - b.startMinutes);
-    else if (sortMode === 'speaker') sorted.sort((a, b) => (repFor(a).speakerName || '').localeCompare(repFor(b).speakerName || ''));
+    else if (sortMode === 'speaker') sorted.sort((a, b) => lastNameOf(repFor(a).speakerName).localeCompare(lastNameOf(repFor(b).speakerName)));
     else if (sortMode === 'topic') sorted.sort((a, b) => repFor(a).broadTopic.localeCompare(repFor(b).broadTopic) || a.startMinutes - b.startMinutes);
     return sorted;
   }
 
-  function createBlockCard(block) {
+  function createBlockCard(block, opts) {
+    opts = opts || {};
     const matchingItems = block.items.filter(e => eventMatchesFilters(e));
     const isMulti = block.items.length > 1;
 
@@ -1032,47 +1113,62 @@ document.addEventListener('DOMContentLoaded', function () {
       card.style.background = colors.bg;
       card.style.borderColor = colors.border;
       card.innerHTML = `
-        <div class="sffp-event-top">
-          <div class="sffp-event-time">${minutesToLabel(block.startMinutes)} – ${minutesToLabel(block.endMinutes)}</div>
-        </div>
+        ${opts.showTime === false ? '' : `<div class="sffp-event-top"><div class="sffp-event-time">${minutesToLabel(block.startMinutes)} – ${minutesToLabel(block.endMinutes)}</div></div>`}
         <div class="sffp-event-title"><i class="fa-solid fa-thumbtack" aria-hidden="true"></i> Poster Session — ${matchingItems.length} of ${block.items.length} posters</div>
         <div class="sffp-event-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(block.room)}</span></div>
       `;
       card.addEventListener('click', () => openPosterListModal(block, matchingItems.length ? matchingItems : block.items));
+      card.dataset.dateKey = block.dateKey;
+      card.dataset.startMinutes = block.startMinutes;
       return card;
     }
 
     const e = matchingItems[0] || block.items[0];
-    return createEventCard(e);
+    return createEventCard(e, opts);
   }
 
-  function createEventCard(e) {
+  function createEventCard(e, opts) {
+    opts = opts || {};
     const colors = TOPIC_COLORS[e.broadTopic] || TOPIC_COLORS.Other;
     const card = document.createElement('div');
     card.className = 'sffp-event-card';
     card.style.background = colors.bg;
     card.style.borderColor = colors.border;
     card.innerHTML = `
-      <div class="sffp-event-top">
-        <div class="sffp-event-time">${minutesToLabel(e.startMinutes)} – ${minutesToLabel(e.endMinutes)}</div>
-      </div>
+      ${opts.showTime === false ? '' : `<div class="sffp-event-top"><div class="sffp-event-time">${minutesToLabel(e.startMinutes)} – ${minutesToLabel(e.endMinutes)}</div></div>`}
+      ${e.sessionName ? `<div class="sffp-event-session">Session: ${escapeHtml(e.sessionName)}</div>` : ''}
       <div class="sffp-event-title">${escapeHtml(e.title)}</div>
-      <div class="sffp-event-meta">
-        <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(e.room)}</span>
-        ${e.speakerName ? `<span><i class="fa-solid fa-user" aria-hidden="true"></i> ${escapeHtml(e.speakerName)}</span>` : ''}
-      </div>
-      ${typeBadgesHtml(e)}
+      ${eventMetaLineHtml(e)}
     `;
     card.addEventListener('click', () => openEventModal(e));
+    card.dataset.dateKey = e.dateKey;
+    card.dataset.startMinutes = e.startMinutes;
     return card;
   }
 
+  // Inline icon+text meta line used on cards: Presentation Type, Room, Speaker —
+  // no pill background, matching Room/Speaker's existing plain style. Topic Area
+  // deliberately does not appear here; it only shows (as a colored pill) in the modal.
+  function eventMetaLineHtml(e) {
+    const icon = TYPE_ICONS[e.abstractType] || 'fa-comment';
+    const label = TYPE_LABELS[e.abstractType] || e.abstractType || '';
+    let html = '<div class="sffp-event-meta">';
+    if (e.abstractType) html += `<span><i class="fa-solid ${icon}" aria-hidden="true"></i> ${escapeHtml(label)}</span>`;
+    html += `<span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(e.room)}</span>`;
+    if (e.speakerName) html += `<span><i class="fa-solid fa-user" aria-hidden="true"></i> ${escapeHtml(e.speakerName)}</span>`;
+    html += '</div>';
+    return html;
+  }
+
+  // Pill-style badges — modal only now. Every type gets an icon here (including
+  // Oral), matching the inline meta line's icon choices.
   function typeBadgesHtml(e, opts) {
     opts = opts || {};
     let badges = `<div class="sffp-badges">`;
-    if (e.abstractType === 'StudentOral' || e.abstractType === 'StudentPoster') badges += `<span class="sffp-badge"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> ${TYPE_LABELS[e.abstractType]}</span>`;
-    else if (e.abstractType === 'Invited') badges += `<span class="sffp-badge"><i class="fa-solid fa-star" aria-hidden="true"></i> Invited</span>`;
-    else if (e.abstractType) badges += `<span class="sffp-badge">${TYPE_LABELS[e.abstractType] || e.abstractType}</span>`;
+    if (e.abstractType) {
+      const icon = TYPE_ICONS[e.abstractType] || 'fa-comment';
+      badges += `<span class="sffp-badge"><i class="fa-solid ${icon}" aria-hidden="true"></i> ${TYPE_LABELS[e.abstractType] || e.abstractType}</span>`;
+    }
     if (opts.colorTopic) {
       const topicColors = TOPIC_COLORS[e.broadTopic] || TOPIC_COLORS.Other;
       badges += `<span class="sffp-badge sffp-badge-topic" style="--topic-color-strong:${topicColors.border};--topic-color-text:${topicColors.text}">${escapeHtml(e.broadTopic)}</span>`;
@@ -1094,7 +1190,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const activeDay = days.find(d => d.dateKey === dayKey) || days[0];
     if (!activeDay) { noEventsEl.style.display = 'block'; return; }
 
-    gridDayNoteEl.textContent = `Showing concurrent sessions for ${activeDay.dateLabel}. Use the Day filter above to switch days — every room's session at the same time slot is a concurrent option.`;
+    gridDayNoteEl.innerHTML = `Showing concurrent sessions for ${escapeHtml(activeDay.dateLabel)}. Use the <a href="#" class="sffp-day-filter-link" id="sffp-dayFilterLink">Day filter</a> above to switch days — every room's session at the same time slot is a concurrent option.`;
+    const dayFilterLink = document.getElementById('sffp-dayFilterLink');
+    if (dayFilterLink) {
+      dayFilterLink.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        openFiltersAndDayDropdown();
+      });
+    }
 
     let dayBlocks = blocks.filter(b => b.dateKey === activeDay.dateKey);
     dayBlocks = dayBlocks.filter(b => b.items.some(e => eventMatchesFilters(e, { ignoreDay: true })));
@@ -1132,6 +1235,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const tbody = document.createElement('tbody');
     times.forEach(t => {
       const tr = document.createElement('tr');
+      tr.dataset.startMinutes = t;
       const timeTd = document.createElement('td');
       timeTd.className = 'sffp-time-col';
       timeTd.textContent = minutesToLabel(t);
@@ -1171,7 +1275,7 @@ document.addEventListener('DOMContentLoaded', function () {
       card.addEventListener('click', () => openPosterListModal(block, matchingItems.length ? matchingItems : block.items));
     } else {
       const e = rep;
-      card.innerHTML = `<div class="sffp-grid-mini-title">${escapeHtml(e.title)}</div><div class="sffp-grid-mini-speaker">${escapeHtml(e.speakerName || '')}</div>`;
+      card.innerHTML = `<div class="sffp-grid-mini-title">${escapeHtml(e.title)}</div><div class="sffp-grid-mini-speaker">${e.speakerName ? `<i class="fa-solid fa-user" aria-hidden="true"></i> ${escapeHtml(e.speakerName)}` : ''}</div>`;
       card.addEventListener('click', () => openEventModal(e));
     }
     return card;
@@ -1184,27 +1288,13 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!activeRooms.length) return;
       const section = document.createElement('div');
       section.className = 'sffp-stacked-time-block';
+      section.dataset.startMinutes = t;
       section.innerHTML = `<div class="sffp-stacked-time-header">${minutesToLabel(t)}</div>`;
       const roomsWrap = document.createElement('div');
       roomsWrap.className = 'sffp-stacked-rooms';
       activeRooms.forEach(room => {
         const block = blockMap.get(`${t}|${room}`);
-        const matchingItems = block.items.filter(e => eventMatchesFilters(e, { ignoreDay: true }));
-        const isMulti = block.items.length > 1;
-        const rep = matchingItems[0] || block.items[0];
-        const colors = TOPIC_COLORS[rep.broadTopic] || TOPIC_COLORS.Other;
-        const card = document.createElement('div');
-        card.className = 'sffp-stacked-room-card';
-        card.style.background = colors.bg;
-        card.style.borderColor = colors.border;
-        if (isMulti) {
-          card.innerHTML = `<div class="sffp-stacked-title"><i class="fa-solid fa-thumbtack" aria-hidden="true"></i> Poster Session</div><div class="sffp-stacked-speaker">${matchingItems.length} of ${block.items.length} posters</div><div class="sffp-stacked-room-name"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(room)}</div>`;
-          card.addEventListener('click', () => openPosterListModal(block, matchingItems.length ? matchingItems : block.items));
-        } else {
-          const e = rep;
-          card.innerHTML = `<div class="sffp-stacked-title">${escapeHtml(e.title)}</div>${e.speakerName ? `<div class="sffp-stacked-speaker"><i class="fa-solid fa-user" aria-hidden="true"></i> ${escapeHtml(e.speakerName)}</div>` : ''}<div class="sffp-stacked-room-name"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(room)}</div>`;
-          card.addEventListener('click', () => openEventModal(e));
-        }
+        const card = createBlockCard(block, { showTime: false });
         roomsWrap.appendChild(card);
       });
       section.appendChild(roomsWrap);
@@ -1346,6 +1436,58 @@ document.addEventListener('DOMContentLoaded', function () {
   // ------------------------------------------------------------
   // Top-level controls
   // ------------------------------------------------------------
+  jumpNowBtn.addEventListener('click', jumpToNow);
+
+  function jumpToNow() {
+    if (!events.length) {
+      showJumpNowMessage('Still loading the schedule — try again in a moment.');
+      return;
+    }
+    const now = new Date();
+    const todayKey = formatDateKey(now);
+    const days = getUniqueDays();
+    const match = days.find(d => d.dateKey === todayKey);
+
+    if (!match) {
+      showJumpNowMessage("It's not currently one of the program days.");
+      return;
+    }
+
+    const dayBtn = dayButtonsEl.querySelector(`[data-day="${match.dateKey}"]`);
+    if (dayBtn) setDayFilter(match.dateKey, dayBtn);
+
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    raf(() => scrollToNearestTime(nowMinutes));
+  }
+
+  function showJumpNowMessage(text) {
+    jumpNowMessageEl.textContent = text;
+    jumpNowMessageEl.classList.add('visible');
+    clearTimeout(showJumpNowMessage._t);
+    showJumpNowMessage._t = setTimeout(() => jumpNowMessageEl.classList.remove('visible'), 3500);
+  }
+
+  function scrollToNearestTime(nowMinutes) {
+    let candidates;
+    if (currentView === 'list') {
+      candidates = Array.from(scheduleListEl.querySelectorAll('[data-start-minutes]'));
+    } else if (gridLayoutMode === 'grid') {
+      candidates = Array.from(scheduleGridWrapEl.querySelectorAll('tr[data-start-minutes]'));
+    } else {
+      candidates = Array.from(scheduleGridWrapEl.querySelectorAll('.sffp-stacked-time-block[data-start-minutes]'));
+    }
+    if (!candidates.length) return;
+    let best = candidates[0];
+    let bestDiff = Infinity;
+    candidates.forEach(elCandidate => {
+      const diff = Math.abs(Number(elCandidate.dataset.startMinutes) - nowMinutes);
+      if (diff < bestDiff) { bestDiff = diff; best = elCandidate; }
+    });
+    if (best && typeof best.scrollIntoView === 'function') {
+      best.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
   topicClearBtn.addEventListener('click', () => {
     filters.topics.clear();
     refreshTopicButtonStates();
@@ -1366,9 +1508,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   sortSelectEl.addEventListener('change', () => { sortMode = sortSelectEl.value; render(); });
 
-  gridLayoutCheckboxEl.checked = gridLayoutMode === 'grid';
+  gridLayoutCheckboxEl.checked = gridLayoutMode === 'stacked';
   gridLayoutCheckboxEl.addEventListener('change', () => {
-    gridLayoutMode = gridLayoutCheckboxEl.checked ? 'grid' : 'stacked';
+    gridLayoutMode = gridLayoutCheckboxEl.checked ? 'stacked' : 'grid';
     render();
   });
 
