@@ -148,7 +148,7 @@
 
   .sffp-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
   .sffp-date-info { font-style: italic; font-weight: 700; color: var(--sffp-muted); font-size: 17px; }
-  .sffp-topbar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .sffp-topbar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-left: auto; }
   .sffp-jump-now-message { color: var(--sffp-muted); font-size: 14px; opacity: 0; transition: opacity .3s; }
   .sffp-jump-now-message.visible { opacity: 1; }
   .sffp-jump-now-btn {
@@ -280,7 +280,7 @@
   .sffp-legend-row { display: flex; flex-wrap: wrap; gap: 14px; }
   .sffp-legend-item { display: flex; align-items: center; gap: 7px; color: var(--sffp-muted); }
   .sffp-legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid; flex-shrink: 0; }
-  .sffp-legend-item i { color: var(--sffp-ink); width: 16px; text-align: center; }
+  .sffp-legend-item i { color: var(--sffp-ink); margin-right: 6px; }
 
   .sffp-grid-day-note { color: var(--sffp-muted); background: #eef5fb; border: 1px solid #cfe3f2; padding: 10px 14px; border-radius: 7px; margin-bottom: 12px; }
   .sffp-day-filter-link { color: var(--sffp-accent); font-weight: 700; cursor: pointer; text-decoration: underline; }
@@ -306,7 +306,7 @@
   .sffp-event-session { color: var(--sffp-muted); }
   .sffp-event-title { font-weight: 600; line-height: 1.35; }
   .sffp-event-meta { color: var(--sffp-muted); display: flex; flex-wrap: wrap; gap: 6px 16px; }
-  .sffp-event-meta i { width: 16px; text-align: center; }
+  .sffp-event-meta i { margin-right: 6px; }
   .sffp-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
   .sffp-badge {
     font-weight: 700; padding: 4px 12px; border-radius: 20px; background: #f0ede6; color: var(--sffp-ink);
@@ -380,6 +380,7 @@
   .sffp-modal-title { font-size: 20px; font-weight: 700; line-height: 1.35; margin: 4px 30px 12px 0; }
   .sffp-modal-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
   .sffp-modal-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; margin-bottom: 16px; padding: 14px 16px; background: #f8f6f1; border-radius: 8px; }
+  .sffp-modal-meta-full { grid-column: 1 / -1; }
   .sffp-modal-meta-label { font-weight: 700; color: #6b6b6b; text-transform: uppercase; letter-spacing: .04em; font-size: 13px; margin-bottom: 2px; }
   .sffp-modal-section { margin-bottom: 14px; }
   .sffp-modal-section-label { font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #6b6b6b; margin-bottom: 6px; font-size: 13px; }
@@ -1115,7 +1116,7 @@ document.addEventListener('DOMContentLoaded', function () {
       card.innerHTML = `
         ${opts.showTime === false ? '' : `<div class="sffp-event-top"><div class="sffp-event-time">${minutesToLabel(block.startMinutes)} – ${minutesToLabel(block.endMinutes)}</div></div>`}
         <div class="sffp-event-title"><i class="fa-solid fa-thumbtack" aria-hidden="true"></i> Poster Session — ${matchingItems.length} of ${block.items.length} posters</div>
-        <div class="sffp-event-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(block.room)}</span></div>
+        <div class="sffp-event-meta"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i>${escapeHtml(block.room)}</span></div>
       `;
       card.addEventListener('click', () => openPosterListModal(block, matchingItems.length ? matchingItems : block.items));
       card.dataset.dateKey = block.dateKey;
@@ -1153,9 +1154,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const icon = TYPE_ICONS[e.abstractType] || 'fa-comment';
     const label = TYPE_LABELS[e.abstractType] || e.abstractType || '';
     let html = '<div class="sffp-event-meta">';
-    if (e.abstractType) html += `<span><i class="fa-solid ${icon}" aria-hidden="true"></i> ${escapeHtml(label)}</span>`;
-    html += `<span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(e.room)}</span>`;
-    if (e.speakerName) html += `<span><i class="fa-solid fa-user" aria-hidden="true"></i> ${escapeHtml(e.speakerName)}</span>`;
+    if (e.abstractType) html += `<span><i class="fa-solid ${icon}" aria-hidden="true"></i>${escapeHtml(label)}</span>`;
+    html += `<span><i class="fa-solid fa-location-dot" aria-hidden="true"></i>${escapeHtml(e.room)}</span>`;
+    if (e.speakerName) html += `<span><i class="fa-solid fa-user" aria-hidden="true"></i>${escapeHtml(e.speakerName)}</span>`;
     html += '</div>';
     return html;
   }
@@ -1369,9 +1370,9 @@ document.addEventListener('DOMContentLoaded', function () {
       <div class="sffp-modal-meta-grid">
         <div><div class="sffp-modal-meta-label">Day</div><div>${escapeHtml(e.dateLabel)}</div></div>
         <div><div class="sffp-modal-meta-label">Time</div><div>${minutesToLabel(e.startMinutes)} – ${minutesToLabel(e.endMinutes)}</div></div>
-        <div><div class="sffp-modal-meta-label">Room</div><div>${escapeHtml(e.room)}</div></div>
-        <div><div class="sffp-modal-meta-label">Session</div><div>${escapeHtml(e.sessionName || '—')}</div></div>
-        <div><div class="sffp-modal-meta-label">Topic Area</div><div>${escapeHtml(e.topicArea || '—')}</div></div>
+        <div class="sffp-modal-meta-full"><div class="sffp-modal-meta-label">Room</div><div>${escapeHtml(e.room)}</div></div>
+        <div class="sffp-modal-meta-full"><div class="sffp-modal-meta-label">Session</div><div>${escapeHtml(e.sessionName || '—')}</div></div>
+        <div class="sffp-modal-meta-full"><div class="sffp-modal-meta-label">Topic Area</div><div>${escapeHtml(e.topicArea || '—')}</div></div>
       </div>
       ${e.speakerName ? `<div class="sffp-modal-section"><div class="sffp-modal-section-label">Speaker</div><div class="sffp-modal-body-text">${escapeHtml(e.speakerName)}${e.speakerCompany ? ', ' + escapeHtml(e.speakerCompany) : ''}</div></div>` : ''}
       ${e.authors ? `<div class="sffp-modal-section"><div class="sffp-modal-section-label">All Authors &amp; Affiliations</div><div class="sffp-modal-body-text">${escapeHtml(e.authors)}</div></div>` : ''}
