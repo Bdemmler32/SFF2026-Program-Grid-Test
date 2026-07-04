@@ -11,10 +11,12 @@
 <div class="sffp-container" id="sffp-container">
 
   <div class="sffp-topbar">
-    <div class="sffp-date-info" id="sffp-dateInfo">Loading...</div>
-    <button type="button" class="sffp-tour-help-btn" id="sffp-tourHelpBtn" aria-label="Take a quick tour">
-      <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
-    </button>
+    <div class="sffp-topbar-left">
+      <div class="sffp-date-info" id="sffp-dateInfo">Loading...</div>
+      <button type="button" class="sffp-tour-help-btn" id="sffp-tourHelpBtn" aria-label="Take a quick tour">
+        <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+      </button>
+    </div>
     <div class="sffp-topbar-right">
       <span class="sffp-jump-now-message" id="sffp-jumpNowMessage"></span>
       <button type="button" class="sffp-jump-now-btn" id="sffp-jumpNowBtn">
@@ -156,17 +158,19 @@
       <!-- Step 3: Filters & Key -->
       <div class="sffp-tour-scene" data-step="3">
         <div class="sffp-tour-scene-filters">
-          <div class="sffp-tour-filters-bar"><span>Filters &amp; Key</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></div>
-          <div class="sffp-tour-filters-chips">
-            <div class="sffp-tour-chip sffp-tour-chip-1">Day</div>
-            <div class="sffp-tour-chip sffp-tour-chip-2">Room</div>
-            <div class="sffp-tour-chip sffp-tour-chip-3">Topic Area</div>
-            <div class="sffp-tour-chip sffp-tour-chip-4">Type</div>
-          </div>
-          <div class="sffp-tour-swatches">
-            <span class="sffp-tour-swatch" style="background:#ffb3b3"></span>
-            <span class="sffp-tour-swatch" style="background:#b3d7ff"></span>
-            <span class="sffp-tour-swatch" style="background:#b3ffd6"></span>
+          <div class="sffp-tour-filters-bar"><span>Filters &amp; Key</span><i class="fa-solid fa-chevron-down sffp-tour-filters-chevron" aria-hidden="true"></i></div>
+          <div class="sffp-tour-filters-panel">
+            <div class="sffp-tour-filters-chips">
+              <div class="sffp-tour-chip sffp-tour-chip-1">Day</div>
+              <div class="sffp-tour-chip sffp-tour-chip-2">Room</div>
+              <div class="sffp-tour-chip sffp-tour-chip-3">Topic Area</div>
+              <div class="sffp-tour-chip sffp-tour-chip-4">Type</div>
+            </div>
+            <div class="sffp-tour-swatches">
+              <span class="sffp-tour-swatch" style="background:#ffb3b3"></span>
+              <span class="sffp-tour-swatch" style="background:#b3d7ff"></span>
+              <span class="sffp-tour-swatch" style="background:#b3ffd6"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -198,19 +202,20 @@
       <div class="sffp-tour-scene" data-step="6">
         <div class="sffp-tour-scene-jump">
           <div class="sffp-tour-jump-btn"><i class="fa-solid fa-clock" aria-hidden="true"></i> Jump to Now</div>
-          <div class="sffp-tour-timeline">
-            <div class="sffp-tour-timeline-track"></div>
-            <div class="sffp-tour-timeline-marker"></div>
-          </div>
         </div>
       </div>
 
       <!-- Step 7: Tap for details -->
       <div class="sffp-tour-scene" data-step="7">
         <div class="sffp-tour-scene-details">
-          <div class="sffp-tour-mini-card"></div>
+          <div class="sffp-tour-mini-card">
+            <div class="sffp-tour-mini-card-line title"></div>
+            <div class="sffp-tour-mini-card-line meta"></div>
+          </div>
           <div class="sffp-tour-mini-modal">
             <div class="sffp-tour-mini-modal-bar"></div>
+            <div class="sffp-tour-mini-modal-line"></div>
+            <div class="sffp-tour-mini-modal-line"></div>
             <div class="sffp-tour-mini-modal-line"></div>
             <div class="sffp-tour-mini-modal-line short"></div>
           </div>
@@ -225,7 +230,7 @@
             <div class="sffp-tour-chip sffp-tour-reset-chip">Room Four</div>
             <div class="sffp-tour-chip sffp-tour-reset-chip">Oral</div>
           </div>
-          <div class="sffp-tour-reset-icon"><i class="fa-solid fa-arrow-rotate-left" aria-hidden="true"></i></div>
+          <div class="sffp-tour-reset-btn">Reset Filters</div>
         </div>
       </div>
 
@@ -290,13 +295,14 @@
   .sffp-container button, .sffp-container input, .sffp-container select { font-size: 16px; font-family: inherit; }
 
   .sffp-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
+  .sffp-topbar-left { display: flex; align-items: center; gap: 8px; }
   .sffp-date-info { font-style: italic; font-weight: 700; color: var(--sffp-muted); font-size: 17px; }
   .sffp-tour-help-btn {
     border: none; background: none; color: var(--sffp-muted); cursor: pointer; font-size: 18px;
     padding: 4px; line-height: 1; display: flex; align-items: center; flex-shrink: 0;
   }
   .sffp-tour-help-btn:hover { color: var(--sffp-accent); }
-  .sffp-topbar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-left: auto; position: relative; }
+  .sffp-topbar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; position: relative; }
   .sffp-jump-now-message {
     position: absolute; top: 100%; right: 0; margin-top: 6px; max-width: 220px; text-align: right;
     color: var(--sffp-muted); font-size: 14px; background: #fdfcfa; border: 1px solid var(--sffp-line);
@@ -565,8 +571,10 @@
     height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
     background: #f8f6f1; border-radius: 10px; overflow: hidden; position: relative;
   }
+  .sffp-tour-stage.sffp-tour-stage-image { height: auto; background: none; border-radius: 0; }
   .sffp-tour-scene { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; position: relative; }
   .sffp-tour-scene.active { display: flex; }
+  .sffp-tour-stage-image .sffp-tour-scene { height: auto; }
 
   .sffp-tour-title { font-size: 19px; font-weight: 700; margin-bottom: 8px; }
   .sffp-tour-text { color: #5f5f5f; line-height: 1.5; margin-bottom: 22px; }
@@ -591,7 +599,7 @@
   .sffp-tour-next-btn:hover { opacity: 0.9; }
 
   /* ---- Scene 0: Welcome ---- */
-  .sffp-tour-welcome-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; }
+  .sffp-tour-welcome-img { width: 100%; height: auto; display: block; border-radius: 6px; }
 
   /* ---- Scene 1: Two views ---- */
   .sffp-tour-scene-views { display: flex; flex-direction: column; gap: 8px; width: 190px; }
@@ -622,13 +630,19 @@
     background: #fff; border: 1px solid var(--sffp-line); border-radius: 8px; padding: 8px 12px; font-size: 12px;
     font-weight: 700; text-align: left; display: flex; align-items: center; justify-content: space-between; color: #5f5f5f;
   }
-  .sffp-tour-filters-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; opacity: 0; animation: sffpTourFadeInHold 3s ease-in-out infinite; }
+  .sffp-tour-filters-chevron { transition: none; animation: sffpTourChevronRotate 4s ease-in-out infinite; }
+  .sffp-tour-filters-panel {
+    max-height: 0; overflow: hidden; background: #fff; border: 1px solid var(--sffp-line); border-top: none;
+    border-radius: 0 0 8px 8px; padding: 0 12px; animation: sffpTourPanelOpen 4s ease-in-out infinite;
+  }
+  .sffp-tour-filters-chips { display: flex; flex-wrap: wrap; gap: 5px; padding-top: 10px; }
   .sffp-tour-chip { background: #fff; border: 1.5px solid var(--sffp-line); border-radius: 14px; padding: 4px 10px; font-size: 11px; font-weight: 600; color: #5f5f5f; }
-  .sffp-tour-chip-2 { animation: sffpTourChipActive 3s ease-in-out infinite; animation-delay: .3s; }
-  .sffp-tour-swatches { display: flex; gap: 5px; margin-top: 8px; opacity: 0; animation: sffpTourFadeInHold 3s ease-in-out infinite; animation-delay: .15s; }
+  .sffp-tour-chip-2 { animation: sffpTourChipActive 4s ease-in-out infinite; animation-delay: .3s; }
+  .sffp-tour-swatches { display: flex; gap: 5px; padding: 8px 0 10px; }
   .sffp-tour-swatch { width: 12px; height: 12px; border-radius: 3px; }
-  @keyframes sffpTourFadeInHold { 0% { opacity: 0; } 25%, 100% { opacity: 1; } }
-  @keyframes sffpTourChipActive { 0%, 20% { background: #fff; border-color: var(--sffp-line); color: #5f5f5f; } 40%, 80% { background: var(--sffp-accent); border-color: var(--sffp-accent); color: #fff; } 100% { background: #fff; border-color: var(--sffp-line); color: #5f5f5f; } }
+  @keyframes sffpTourChevronRotate { 0%, 10% { transform: rotate(0deg); } 30%, 70% { transform: rotate(180deg); } 90%, 100% { transform: rotate(0deg); } }
+  @keyframes sffpTourPanelOpen { 0%, 10% { max-height: 0; } 30%, 70% { max-height: 100px; } 90%, 100% { max-height: 0; } }
+  @keyframes sffpTourChipActive { 0%, 25% { background: #fff; border-color: var(--sffp-line); color: #5f5f5f; } 45%, 65% { background: var(--sffp-accent); border-color: var(--sffp-accent); color: #fff; } 90%, 100% { background: #fff; border-color: var(--sffp-line); color: #5f5f5f; } }
 
   /* ---- Scene 4: Search ---- */
   .sffp-tour-search-bar {
@@ -641,9 +655,10 @@
     position: absolute; top: 0; left: 0; white-space: nowrap; overflow: hidden; width: 0; display: inline-block;
     font-size: 13px; color: #2a2a2a;
   }
-  .sffp-tour-search-word-1 { animation: sffpTourTypeWord 6s steps(7) infinite; }
-  .sffp-tour-search-word-2 { animation: sffpTourTypeWord 6s steps(11) infinite; animation-delay: 3s; }
-  @keyframes sffpTourTypeWord { 0% { width: 0; } 20%, 45% { width: 100%; } 50%, 100% { width: 0; } }
+  .sffp-tour-search-word-1 { animation: sffpTourTypeWord1 6s steps(7) infinite; }
+  .sffp-tour-search-word-2 { animation: sffpTourTypeWord2 6s steps(11) infinite; animation-delay: 3s; }
+  @keyframes sffpTourTypeWord1 { 0% { width: 0; } 20%, 45% { width: 7ch; } 50%, 100% { width: 0; } }
+  @keyframes sffpTourTypeWord2 { 0% { width: 0; } 20%, 45% { width: 11ch; } 50%, 100% { width: 0; } }
   .sffp-tour-search-cursor { width: 1.5px; height: 14px; background: var(--sffp-accent); animation: sffpTourBlink .8s step-end infinite; }
   @keyframes sffpTourBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
 
@@ -669,38 +684,44 @@
     68% { transform: scale(0.93); background: var(--sffp-accent); border-color: var(--sffp-accent); color: #fff; }
     78%, 100% { transform: scale(1); background: #fff; border-color: var(--sffp-line); color: var(--sffp-ink); }
   }
-  .sffp-tour-timeline { position: relative; width: 160px; height: 4px; }
-  .sffp-tour-timeline-track { position: absolute; inset: 0; background: var(--sffp-line); border-radius: 4px; }
-  .sffp-tour-timeline-marker {
-    position: absolute; top: -4px; width: 12px; height: 12px; border-radius: 50%; background: var(--sffp-accent);
-    animation: sffpTourMarker 2.5s ease-in-out infinite;
-  }
-  @keyframes sffpTourMarker { 0% { left: 0; } 70%, 100% { left: calc(100% - 12px); } }
 
   /* ---- Scene 7: Tap for details ---- */
-  .sffp-tour-scene-details { position: relative; width: 160px; height: 110px; }
+  .sffp-tour-scene-details { position: relative; width: 190px; height: 130px; }
   .sffp-tour-mini-card {
-    position: absolute; inset: 0; background: #ffe6e6; border: 1.5px solid #ffb3b3; border-radius: 8px;
+    position: absolute; top: 50%; left: 50%; width: 120px; height: 56px;
+    background: #ffe6e6; border: 1.5px solid #ffb3b3; border-radius: 8px;
+    display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 0 12px;
     animation: sffpTourCardShrink 3.5s ease-in-out infinite;
   }
+  .sffp-tour-mini-card-line { height: 6px; border-radius: 3px; background: rgba(138,44,44,0.35); }
+  .sffp-tour-mini-card-line.title { width: 80%; height: 8px; background: rgba(138,44,44,0.6); }
+  .sffp-tour-mini-card-line.meta { width: 50%; }
   .sffp-tour-mini-modal {
-    position: absolute; inset: 0; background: #fff; border: 1px solid var(--sffp-line); border-radius: 8px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.12); padding: 10px; opacity: 0; transform: scale(0.85);
+    position: absolute; top: 50%; left: 50%; width: 170px; height: 120px;
+    background: #fff; border: 1px solid var(--sffp-line); border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12); padding: 14px; opacity: 0;
     animation: sffpTourModalGrow 3.5s ease-in-out infinite;
   }
-  .sffp-tour-mini-modal-bar { width: 70%; height: 8px; background: #2a2a2a; border-radius: 3px; margin-bottom: 10px; }
-  .sffp-tour-mini-modal-line { width: 100%; height: 5px; background: #e2ddd2; border-radius: 3px; margin-bottom: 6px; }
+  .sffp-tour-mini-modal-bar { width: 70%; height: 8px; background: #2a2a2a; border-radius: 3px; margin-bottom: 12px; }
+  .sffp-tour-mini-modal-line { width: 100%; height: 5px; background: #e2ddd2; border-radius: 3px; margin-bottom: 7px; }
   .sffp-tour-mini-modal-line.short { width: 60%; }
-  @keyframes sffpTourCardShrink { 0%, 30% { opacity: 1; transform: scale(1); } 45%, 100% { opacity: 0; transform: scale(1.15); } }
-  @keyframes sffpTourModalGrow { 0%, 30% { opacity: 0; transform: scale(0.85); } 50%, 90% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.85); } }
+  @keyframes sffpTourCardShrink { 0%, 30% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 45%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.15); } }
+  @keyframes sffpTourModalGrow { 0%, 30% { opacity: 0; transform: translate(-50%, -50%) scale(0.85); } 50%, 90% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.85); } }
 
   /* ---- Scene 8: Reset Filters ---- */
   .sffp-tour-scene-reset { display: flex; flex-direction: column; align-items: center; gap: 14px; }
   .sffp-tour-reset-chips { display: flex; gap: 6px; animation: sffpTourResetFade 3s ease-in-out infinite; }
   .sffp-tour-reset-chip { background: var(--sffp-accent); border-color: var(--sffp-accent); color: #fff; }
-  .sffp-tour-reset-icon i { font-size: 20px; color: #8a8a8a; display: inline-block; animation: sffpTourSpin 3s ease-in-out infinite; }
+  .sffp-tour-reset-btn {
+    padding: 8px 16px; border-radius: 7px; border: 1.5px solid var(--sffp-line); background: #fff;
+    color: var(--sffp-muted); font-weight: 600; font-size: 13px; animation: sffpTourResetPress 3s ease-in-out infinite;
+  }
   @keyframes sffpTourResetFade { 0%, 55% { opacity: 1; } 70%, 100% { opacity: 0; } }
-  @keyframes sffpTourSpin { 0%, 60% { transform: rotate(0deg); } 75% { transform: rotate(-360deg); } 100% { transform: rotate(-360deg); } }
+  @keyframes sffpTourResetPress {
+    0%, 50% { transform: scale(1); border-color: var(--sffp-line); color: var(--sffp-muted); }
+    58% { transform: scale(0.93); border-color: #c0392b; color: #c0392b; }
+    68%, 100% { transform: scale(1); border-color: var(--sffp-line); color: var(--sffp-muted); }
+  }
 
   /* ---- Scene 9: Done ---- */
   .sffp-tour-checkmark { width: 64px; height: 64px; }
@@ -719,7 +740,8 @@
     .sffp-toolbar { flex-direction: column; align-items: stretch; }
     .sffp-modal { padding: 22px 18px 20px; max-height: 90vh; }
     .sffp-modal-meta-grid { grid-template-columns: 1fr; }
-    .sffp-topbar { flex-wrap: wrap; }
+    .sffp-topbar { flex-direction: column; align-items: stretch; gap: 10px; }
+    .sffp-topbar-left, .sffp-topbar-right { justify-content: space-between; }
     .sffp-filters-summary-right { gap: 8px; }
     .sffp-reset-btn { padding: 6px 10px; font-size: 13px; }
   }
@@ -1773,12 +1795,12 @@ document.addEventListener('DOMContentLoaded', function () {
     { title: 'Two ways to view the schedule', text: 'See what\u2019s running at the same time (Concurrent Schedule), or browse straight through chronologically (Schedule List).' },
     { title: 'Grid vs. Stacked', text: 'Grid shows rooms and time as a real table. Stacked breaks it into scannable sections \u2014 easier on a smaller screen.' },
     { title: 'Filter by Day, Room, Topic, or Type', text: 'Mix and match any combination. The Key at the bottom explains every color and icon you\u2019ll see.' },
-    { title: 'Search everything', text: 'Titles, speakers, companies, sessions, rooms, topics \u2014 even the full abstract text.' },
-    { title: 'Reorder the list', text: 'Sort by Time, Room, Speaker (by last name), or Topic Area. List and Stacked only \u2014 Grid is always time-ordered.' },
+    { title: 'Search everything', text: 'Titles, speakers, sessions, rooms, topics \u2014 even the full abstract text.' },
+    { title: 'Reorder the list', text: 'Sort by Time, Room, Speaker (by last name), or Topic Area. Schedule List only \u2014 Grid is always time-ordered.' },
     { title: 'Find what\u2019s happening right now', text: 'If today\u2019s a conference day, this jumps straight to the current time slot.' },
-    { title: 'Tap any session for the full picture', text: 'Company, all authors, and the complete abstract. Poster sessions open a list first since several often share one time slot.' },
+    { title: 'Tap any session for the full picture', text: 'All Authors, session information, the complete abstract, and more. Poster sessions open as a list first, allowing you to choose the specific poster.' },
     { title: 'Start over anytime', text: 'Clears every filter and search term in one tap.' },
-    { title: 'That\u2019s the tour', text: 'Tap the ? next to the date anytime to see it again.' }
+    { title: 'That\u2019s the tour', html: 'Tap the <i class="fa-solid fa-circle-question" aria-hidden="true"></i> next to the Current as of date anytime to replay this tour.' }
   ];
 
   let currentTourStep = 0;
@@ -1798,8 +1820,10 @@ document.addEventListener('DOMContentLoaded', function () {
     currentTourStep = i;
     const isLast = i === TOUR_STEPS.length - 1;
     tourScenes.forEach(scene => scene.classList.toggle('active', Number(scene.dataset.step) === i));
+    tourStage.classList.toggle('sffp-tour-stage-image', i === 0);
     tourTitleEl.textContent = TOUR_STEPS[i].title;
-    tourTextEl.textContent = TOUR_STEPS[i].text;
+    if (TOUR_STEPS[i].html) tourTextEl.innerHTML = TOUR_STEPS[i].html;
+    else tourTextEl.textContent = TOUR_STEPS[i].text;
     tourDotsEl.querySelectorAll('.sffp-tour-dot').forEach((dot, idx) => dot.classList.toggle('active', idx === i));
     tourBackBtn.disabled = i === 0;
     tourBackBtn.style.display = isLast ? 'none' : '';
@@ -1908,6 +1932,8 @@ document.addEventListener('DOMContentLoaded', function () {
     currentView = 'list';
     viewListBtn.classList.add('active');
     viewGridBtn.classList.remove('active');
+    filters.day = 'all';
+    dayButtonsEl.querySelectorAll('.sffp-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.day === 'all'));
     render();
   });
   viewGridBtn.addEventListener('click', () => {
