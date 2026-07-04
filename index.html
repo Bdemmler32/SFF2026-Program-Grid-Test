@@ -1505,6 +1505,11 @@ document.addEventListener('DOMContentLoaded', function () {
     currentView = 'list';
     viewListBtn.classList.add('active');
     viewGridBtn.classList.remove('active');
+    // Concurrent Schedule forces a specific day (All Days is disabled there), so
+    // that selection would otherwise silently carry over into List view and show
+    // just one day instead of everything. Always reset to All Days on switching in.
+    filters.day = 'all';
+    dayButtonsEl.querySelectorAll('.sffp-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.day === 'all'));
     render();
   });
   viewGridBtn.addEventListener('click', () => {
